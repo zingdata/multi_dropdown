@@ -91,7 +91,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   /// [searchEnabled] is the flag to enable search in dropdown. It is used to show search bar in dropdown.
   final bool searchEnabled;
   final double? searchBoxHeight;
-  final Padding? searchBoxPadding;
+  final EdgeInsets? searchBoxPadding;
   final InputDecoration? searchInputDecoration;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
@@ -733,7 +733,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                         if (widget.searchEnabled) ...[
                           Container(
                             height: widget.searchBoxHeight,
-                            padding: const EdgeInsets.all(8.0),
+                            padding: widget.searchBoxPadding??  const EdgeInsets.all(8.0),
                             child: TextFormField(
                               controller: searchController,
                               focusNode: _searchFocusNode,
