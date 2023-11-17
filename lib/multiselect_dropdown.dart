@@ -39,8 +39,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final OnOptionSelected<T>? onOptionSelected;
 
   // selected option
-  final Icon? selectedOptionIcon;
-  final Icon? unSelectedOptionIcon;
+  final Widget? selectedOptionIcon;
+  final Widget? unSelectedOptionIcon;
   final Color? selectedOptionTextColor;
   final Color? selectedOptionBackgroundColor;
   final ShapeBorder? selectedOptionShapeBorder;
@@ -666,7 +666,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       return null;
     }
 
-    final Icon icon = (isSelected ? widget.selectedOptionIcon : widget.unSelectedOptionIcon) ??
+    final Widget icon = (isSelected ? widget.selectedOptionIcon : widget.unSelectedOptionIcon) ??
         Icon(
           Icons.check,
           color: widget.optionTextStyle?.color ?? Colors.grey,
