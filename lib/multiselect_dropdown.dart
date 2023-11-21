@@ -93,6 +93,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final double? searchBoxHeight;
   final EdgeInsets? searchBoxPadding;
   final InputDecoration? searchInputDecoration;
+  final Function(String value)? onSearch;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -240,6 +241,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxHeight,
     this.searchInputDecoration,
     this.searchBoxPadding,
+    this.onSearch,
     this.dropDownBoxDecoration,
   })  : networkConfig = null,
         responseParser = null,
@@ -298,6 +300,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxHeight,
     this.searchInputDecoration,
     this.searchBoxPadding,
+    this.onSearch,
     this.dropDownBoxDecoration,
   })  : options = const [],
         super(key: key);
@@ -733,7 +736,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                         if (widget.searchEnabled) ...[
                           Container(
                             height: widget.searchBoxHeight,
-                            padding: widget.searchBoxPadding??  const EdgeInsets.all(8.0),
+                            padding: widget.searchBoxPadding ?? const EdgeInsets.all(8.0),
                             child: TextFormField(
                               controller: searchController,
                               focusNode: _searchFocusNode,
@@ -766,15 +769,17 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                       },
                                     ),
                                   ),
-                              onChanged: (value) {
-                                debugPrint('search value changed: $value');
-                                dropdownState(() {
-                                  options = _options
-                                      .where((element) =>
-                                          element.label.toLowerCase().contains(value.toLowerCase()))
-                                      .toList();
-                                });
-                              },
+                              onChanged: widget.onSearch ??
+                                  (value) {
+                                    debugPrint('search value changed: $value');
+                                    dropdownState(() {
+                                      options = _options
+                                          .where((element) => element.label
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase()))
+                                          .toList();
+                                    });
+                                  },
                             ),
                           ),
                           const Divider(height: 1),
