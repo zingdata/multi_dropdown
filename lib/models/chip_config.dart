@@ -55,6 +55,8 @@ class ChipConfig {
 
   final WrapType wrapType;
 
+  final OutlinedBorder? outlineBorder;
+
   final bool autoScroll;
 
   const ChipConfig({
@@ -71,5 +73,6 @@ class ChipConfig {
     this.wrapType = WrapType.scroll,
     this.labelPadding = EdgeInsets.zero,
     this.autoScroll = false,
+    this.outlineBorder,
   });
 }

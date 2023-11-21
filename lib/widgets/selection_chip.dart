@@ -20,16 +20,17 @@ class SelectionChip<T> extends StatelessWidget {
     return Chip(
       padding: chipConfig.padding,
       label: Text(item.label),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(chipConfig.radius),
-      ),
+      shape: chipConfig.outlineBorder ??
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              chipConfig.radius,
+            ),
+          ),
       deleteIcon: chipConfig.deleteIcon,
       deleteIconColor: chipConfig.deleteIconColor,
       labelPadding: chipConfig.labelPadding,
-      backgroundColor:
-          chipConfig.backgroundColor ?? Theme.of(context).primaryColor,
-      labelStyle: chipConfig.labelStyle ??
-          TextStyle(color: chipConfig.labelColor, fontSize: 14),
+      backgroundColor: chipConfig.backgroundColor ?? Theme.of(context).primaryColor,
+      labelStyle: chipConfig.labelStyle ?? TextStyle(color: chipConfig.labelColor, fontSize: 14),
       onDeleted: () => onItemDelete(item),
     );
   }
