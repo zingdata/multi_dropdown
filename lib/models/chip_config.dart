@@ -58,6 +58,7 @@ class ChipConfig {
   final OutlinedBorder? outlineBorder;
 
   final bool autoScroll;
+  final bool canDelete;
 
   const ChipConfig({
     this.deleteIcon,
@@ -73,6 +74,7 @@ class ChipConfig {
     this.wrapType = WrapType.scroll,
     this.labelPadding = EdgeInsets.zero,
     this.autoScroll = false,
+    this.canDelete = true,
     this.outlineBorder,
   });
 }

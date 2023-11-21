@@ -634,15 +634,17 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       item: item,
       chipConfig: chipConfig,
       onItemDelete: (removedItem) {
-        if (_controller != null) {
-          _controller!.clearSelection(removedItem);
-        } else {
-          setState(() {
-            _selectedOptions.remove(removedItem);
-          });
-          widget.onOptionSelected?.call(_selectedOptions);
+        if (chipConfig.canDelete) {
+          if (_controller != null) {
+            _controller!.clearSelection(removedItem);
+          } else {
+            setState(() {
+              _selectedOptions.remove(removedItem);
+            });
+            widget.onOptionSelected?.call(_selectedOptions);
+          }
+          if (_focusNode.hasFocus) _focusNode.unfocus();
         }
-        if (_focusNode.hasFocus) _focusNode.unfocus();
       },
     );
   }
