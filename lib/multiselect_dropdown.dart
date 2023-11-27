@@ -97,6 +97,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final Function(String value)? onSearch;
   final VoidCallback? reachedMaxOptionsScroll;
   final Function(OverlayEntry? overlayEntry)? onShowOverlay;
+  final bool gettingOptions;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -248,6 +249,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.onSearch,
     this.dropDownBoxDecoration,
     this.reachedMaxOptionsScroll,
+    this.gettingOptions = false,
     this.onShowOverlay,
   })  : networkConfig = null,
         responseParser = null,
@@ -311,6 +313,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.dropDownBoxDecoration,
     this.reachedMaxOptionsScroll,
     this.onShowOverlay,
+    this.gettingOptions = false,
   })  : options = const [],
         super(key: key);
 
@@ -796,43 +799,56 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                           const Divider(height: 1),
                         ],
                         Expanded(
-                          child: MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: NotificationListener<ScrollEndNotification>(
-                              onNotification: (scrollEnd) {
-                                final metrics = scrollEnd.metrics;
-                                if (metrics.atEdge && widget.reachedMaxOptionsScroll != null) {
-                                  bool isTop = metrics.pixels == 0;
-                                  if (!isTop) {
-                                    widget.reachedMaxOptionsScroll!();
-                                  }
-                                }
-                                return true;
-                              },
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return widget.optionSeparator ?? const SizedBox(height: 0);
-                                },
-                                padding: EdgeInsets.zero,
-                                itemCount: options.length,
-                                itemBuilder: (context, index) {
-                                  final option = options[index];
-                                  final isSelected = selectedOptions.firstWhereOrNull(
-                                          (element) => element.label == option.label) !=
-                                      null;
-                                  final primaryColor = Theme.of(context).primaryColor;
-                                  return _buildOption(
-                                    option,
-                                    primaryColor,
-                                    isSelected,
-                                    dropdownState,
-                                    selectedOptions,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                          child: widget.gettingOptions
+                              ? Align(
+                                  alignment:
+                                      options.isEmpty ? Alignment.center : Alignment.topCenter,
+                                  child: SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                )
+                              : MediaQuery.removePadding(
+                                  context: context,
+                                  removeTop: true,
+                                  child: NotificationListener<ScrollEndNotification>(
+                                    onNotification: (scrollEnd) {
+                                      final metrics = scrollEnd.metrics;
+                                      if (metrics.atEdge &&
+                                          widget.reachedMaxOptionsScroll != null) {
+                                        bool isTop = metrics.pixels == 0;
+                                        if (!isTop) {
+                                          widget.reachedMaxOptionsScroll!();
+                                        }
+                                      }
+                                      return true;
+                                    },
+                                    child: ListView.separated(
+                                      separatorBuilder: (context, index) {
+                                        return widget.optionSeparator ?? const SizedBox(height: 0);
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      itemCount: options.length,
+                                      itemBuilder: (context, index) {
+                                        final option = options[index];
+                                        final isSelected = selectedOptions.firstWhereOrNull(
+                                                (element) => element.label == option.label) !=
+                                            null;
+                                        final primaryColor = Theme.of(context).primaryColor;
+                                        return _buildOption(
+                                          option,
+                                          primaryColor,
+                                          isSelected,
+                                          dropdownState,
+                                          selectedOptions,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     ),
