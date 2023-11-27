@@ -759,7 +759,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               followerAnchor: showOnTop ? Alignment.bottomLeft : Alignment.topLeft,
               child: Material(
                   color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(6),
                   child: Container(
                     constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
                     decoration: widget.dropDownBoxDecoration,
@@ -870,6 +869,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                               padding: widget.optionItemPadding,
                                               child: Material(
                                                 color: Colors.transparent,
+                                                borderRadius: BorderRadius.circular(6),
                                                 child: _buildOption(
                                                   option,
                                                   primaryColor,
@@ -926,7 +926,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       dense: true,
       tileColor: widget.optionsBackgroundColor ?? Colors.white,
       selectedTileColor: widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
-      shape: isSelected ? widget.selectedOptionShapeBorder : null,
+      shape: widget.selectedOptionShapeBorder,
       enabled:
           !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
       onTap: () {
