@@ -98,6 +98,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final VoidCallback? reachedMaxOptionsScroll;
   final Function(OverlayEntry? overlayEntry)? onShowOverlay;
   final bool gettingOptions;
+  final EdgeInsets? optionsContentPadding;
+  final EdgeInsets optionItemPadding;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -251,6 +253,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.reachedMaxOptionsScroll,
     this.gettingOptions = false,
     this.onShowOverlay,
+    this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
+    this.optionsContentPadding,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -314,6 +318,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.reachedMaxOptionsScroll,
     this.onShowOverlay,
     this.gettingOptions = false,
+    this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
+    this.optionsContentPadding,
   })  : options = const [],
         super(key: key);
 
@@ -859,14 +865,17 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                                     (element) => element.label == option.label) !=
                                                 null;
                                             final primaryColor = Theme.of(context).primaryColor;
-                                            return Material(
-                                              color: Colors.transparent,  
-                                              child: _buildOption(
-                                                option,
-                                                primaryColor,
-                                                isSelected,
-                                                dropdownState,
-                                                selectedOptions,
+                                            return Padding(
+                                              padding: widget.optionItemPadding,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: _buildOption(
+                                                  option,
+                                                  primaryColor,
+                                                  isSelected,
+                                                  dropdownState,
+                                                  selectedOptions,
+                                                ),
                                               ),
                                             );
                                           },
@@ -912,6 +921,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       selectedColor: widget.selectedOptionTextColor ?? primaryColor,
       selected: isSelected,
       autofocus: true,
+      contentPadding: widget.optionsContentPadding,
       dense: true,
       tileColor: widget.optionsBackgroundColor ?? Colors.white,
       selectedTileColor: widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
