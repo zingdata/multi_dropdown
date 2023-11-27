@@ -95,6 +95,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final InputDecoration? searchInputDecoration;
   final TextInputType? searchKeyboardType;
   final Function(String value)? onSearch;
+  final VoidCallback? reachedMaxOptionsScroll;
+  final Function(OverlayEntry? overlayEntry)? onShowOverlay;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -245,6 +247,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
+    this.reachedMaxOptionsScroll,
+    this.onShowOverlay,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -305,6 +309,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
+    this.reachedMaxOptionsScroll,
+    this.onShowOverlay,
   })  : options = const [],
         super(key: key);
 
@@ -394,12 +400,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           ? _buildNetworkErrorOverlayEntry()
           : _buildOverlayEntry();
       Overlay.of(context).insert(_overlayEntry!);
+      if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
       return;
     }
 
     if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
         _overlayEntry != null) {
       _overlayEntry?.remove();
+      if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
     }
 
     if (mounted) {
@@ -794,24 +802,36 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                           child: MediaQuery.removePadding(
                             context: context,
                             removeTop: true,
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return widget.optionSeparator ?? const SizedBox(height: 0);
+                            child: NotificationListener<ScrollEndNotification>(
+                              onNotification: (scrollEnd) {
+                                final metrics = scrollEnd.metrics;
+                                if (metrics.atEdge && widget.reachedMaxOptionsScroll != null) {
+                                  bool isTop = metrics.pixels == 0;
+                                  if (!isTop) {
+                                    widget.reachedMaxOptionsScroll!();
+                                  }
+                                }
+                                return true;
                               },
-                              padding: EdgeInsets.zero,
-                              itemCount: options.length,
-                              itemBuilder: (context, index) {
-                                final option = options[index];
-                                final isSelected = selectedOptions.contains(option);
-                                final primaryColor = Theme.of(context).primaryColor;
-                                return _buildOption(
-                                  option,
-                                  primaryColor,
-                                  isSelected,
-                                  dropdownState,
-                                  selectedOptions,
-                                );
-                              },
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return widget.optionSeparator ?? const SizedBox(height: 0);
+                                },
+                                padding: EdgeInsets.zero,
+                                itemCount: options.length,
+                                itemBuilder: (context, index) {
+                                  final option = options[index];
+                                  final isSelected = selectedOptions.contains(option);
+                                  final primaryColor = Theme.of(context).primaryColor;
+                                  return _buildOption(
+                                    option,
+                                    primaryColor,
+                                    isSelected,
+                                    dropdownState,
+                                    selectedOptions,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
