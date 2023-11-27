@@ -93,6 +93,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final double? searchBoxHeight;
   final EdgeInsets? searchBoxPadding;
   final InputDecoration? searchInputDecoration;
+  final TextInputType? searchKeyboardType;
   final Function(String value)? onSearch;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
@@ -240,6 +241,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchEnabled = false,
     this.searchBoxHeight,
     this.searchInputDecoration,
+    this.searchKeyboardType,
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
@@ -299,6 +301,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchEnabled = false,
     this.searchBoxHeight,
     this.searchInputDecoration,
+    this.searchKeyboardType,
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
@@ -742,6 +745,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                             child: TextFormField(
                               controller: searchController,
                               focusNode: _searchFocusNode,
+                              keyboardType: widget.searchKeyboardType,
                               decoration: widget.searchInputDecoration ??
                                   InputDecoration(
                                     fillColor: Colors.grey.shade200,
