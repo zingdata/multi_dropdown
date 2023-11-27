@@ -425,7 +425,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Handles the widget rebuild when the options are changed externally.
   @override
   void didUpdateWidget(covariant MultiSelectDropDown<T> oldWidget) {
-    bool updateOverlay = false;
     // If the options are changed externally, then the options are updated.
     if (listEquals(widget.options, oldWidget.options) == false) {
       _options.clear();
@@ -435,7 +434,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setOptions(_options);
       }
-      updateOverlay = true;
     }
 
     // If the selected options are changed externally, then the selected options are updated.
@@ -448,7 +446,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setSelectedOptions(_selectedOptions);
       }
-      updateOverlay = true;
     }
 
     // If the disabled options are changed externally, then the disabled options are updated.
@@ -461,15 +458,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setDisabledOptions(_disabledOptions);
       }
-      updateOverlay = true;
     }
-    if (updateOverlay) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _overlayEntry?.markNeedsBuild();
-        setState(() {});
-      });
-    }
-
     super.didUpdateWidget(oldWidget);
   }
 
