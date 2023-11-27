@@ -10,7 +10,7 @@ import 'package:multi_dropdown/widgets/hint_text.dart';
 import 'package:multi_dropdown/widgets/selection_chip.dart';
 import 'package:multi_dropdown/widgets/single_selected_item.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:collection/collection.dart';
 import 'models/chip_config.dart';
 import 'models/value_item.dart';
 import 'enum/app_enums.dart';
@@ -439,8 +439,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     // If the selected options are changed externally, then the selected options are updated.
     if (listEquals(widget.selectedOptions, oldWidget.selectedOptions) == false) {
       _selectedOptions.clear();
-      _selectedOptions.addAll(
-          widget.options.where((element) => widget.selectedOptions.contains(element.value)));
+      _selectedOptions.addAll(widget.selectedOptions);
 
       // If the controller is not null, then the selected options are updated in the controller.
       if (_controller != null) {
@@ -451,8 +450,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     // If the disabled options are changed externally, then the disabled options are updated.
     if (listEquals(widget.disabledOptions, oldWidget.disabledOptions) == false) {
       _disabledOptions.clear();
-      _disabledOptions.addAll(
-          widget.options.where((element) => widget.disabledOptions.contains(element.value)));
+      _disabledOptions.addAll(widget.disabledOptions);
 
       // If the controller is not null, then the disabled options are updated in the controller.
       if (_controller != null) {
@@ -820,7 +818,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                 itemCount: options.length,
                                 itemBuilder: (context, index) {
                                   final option = options[index];
-                                  final isSelected = selectedOptions.contains(option);
+                                  final isSelected = selectedOptions.firstWhereOrNull(
+                                          (element) => element.label == option.label) !=
+                                      null;
                                   final primaryColor = Theme.of(context).primaryColor;
                                   return _buildOption(
                                     option,
@@ -861,7 +861,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       tileColor: widget.optionsBackgroundColor ?? Colors.white,
       selectedTileColor: widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
       shape: isSelected ? widget.selectedOptionShapeBorder : null,
-      enabled: !_disabledOptions.contains(option),
+      enabled:
+          !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
       onTap: () {
         if (widget.selectionType == SelectionType.multi) {
           if (isSelected) {
@@ -1097,13 +1098,17 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   /// clear specific selected option
   /// [MultiSelectController] is used to clear specific selected option.
   void clearSelection(ValueItem<T> option) {
-    if (!value._selectedOptions.contains(option)) return;
+    if (value._selectedOptions.firstWhereOrNull((element) => element.label == option.label) ==
+        null) {
+      return;
+    }
 
-    if (value._disabledOptions.contains(option)) {
+    if (value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
+        null) {
       throw Exception('Cannot clear selection of a disabled option');
     }
 
-    if (!value._options.contains(option)) {
+    if (value._options.firstWhereOrNull((element) => element.label == option.label) == null) {
       throw Exception('Cannot clear selection of an option that is not in the options list');
     }
 
@@ -1114,11 +1119,14 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   /// select the options
   /// [MultiSelectController] is used to select the options.
   void setSelectedOptions(List<ValueItem<T>> options) {
-    if (options.any((element) => value._disabledOptions.contains(element))) {
+    if (options.any((option) =>
+        value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
+        null)) {
       throw Exception('Cannot select disabled options');
     }
 
-    if (options.any((element) => !value._options.contains(element))) {
+    if (options.any((element) =>
+        value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
       throw Exception('Cannot select options that are not in the options list');
     }
 
@@ -1130,11 +1138,12 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   /// add selected option
   /// [MultiSelectController] is used to add selected option.
   void addSelectedOption(ValueItem<T> option) {
-    if (value._disabledOptions.contains(option)) {
+    if (value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
+        null) {
       throw Exception('Cannot select disabled option');
     }
 
-    if (!value._options.contains(option)) {
+    if (value._options.firstWhereOrNull((element) => element.label == option.label) == null) {
       throw Exception('Cannot select option that is not in the options list');
     }
 
@@ -1145,7 +1154,8 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   /// set disabled options
   /// [MultiSelectController] is used to set disabled options.
   void setDisabledOptions(List<ValueItem<T>> disabledOptions) {
-    if (disabledOptions.any((element) => !value._options.contains(element))) {
+    if (disabledOptions.any((element) =>
+        value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
       throw Exception('Cannot disable options that are not in the options list');
     }
 
@@ -1157,7 +1167,8 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   /// setDisabledOption method
   /// [MultiSelectController] is used to set disabled option.
   void setDisabledOption(ValueItem<T> disabledOption) {
-    if (!value._options.contains(disabledOption)) {
+    if (value._options.firstWhereOrNull((element) => element.label == disabledOption.label) ==
+        null) {
       throw Exception('Cannot disable option that is not in the options list');
     }
 
@@ -1177,8 +1188,11 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
   List<ValueItem<T>> get disabledOptions => value._disabledOptions;
 
   /// get enabled options
-  List<ValueItem<T>> get enabledOptions =>
-      value._options.where((element) => !value._disabledOptions.contains(element)).toList();
+  List<ValueItem<T>> get enabledOptions => value._options
+      .where((option) =>
+          value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) ==
+          null)
+      .toList();
 
   /// get options
   List<ValueItem<T>> get options => value._options;

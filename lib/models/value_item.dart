@@ -43,14 +43,17 @@ class ValueItem<T> {
   String toJson() => json.encode(toMap());
 
   /// fromJson method for [ValueItem]
-  factory ValueItem.fromJson(String source) => ValueItem<T>.fromMap(json.decode(source));
+  factory ValueItem.fromJson(String source) =>
+      ValueItem<T>.fromMap(json.decode(source));
 
   /// Equality operator for [ValueItem]
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ValueItem<T> && other.label == label;
+    return other is ValueItem<T> &&
+        other.label == label &&
+        other.value == value;
   }
 
   /// Hashcode for [ValueItem]
