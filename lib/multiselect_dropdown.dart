@@ -428,6 +428,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Handles the widget rebuild when the options are changed externally.
   @override
   void didUpdateWidget(covariant MultiSelectDropDown<T> oldWidget) {
+    bool needUpdate = false;
     // If the options are changed externally, then the options are updated.
     if (listEquals(widget.options, oldWidget.options) == false) {
       _options.clear();
@@ -437,6 +438,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setOptions(_options);
       }
+      needUpdate = true;
     }
 
     // If the selected options are changed externally, then the selected options are updated.
@@ -448,6 +450,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setSelectedOptions(_selectedOptions);
       }
+      needUpdate = true;
     }
 
     // If the disabled options are changed externally, then the disabled options are updated.
@@ -459,6 +462,16 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.setDisabledOptions(_disabledOptions);
       }
+      needUpdate = true;
+    }
+    if (widget.gettingOptions != oldWidget.gettingOptions) {
+      needUpdate = true;
+    }
+    if (needUpdate) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+        _overlayEntry?.markNeedsBuild();
+      });
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -803,8 +816,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                               ? Align(
                                   alignment: Alignment.center,
                                   child: SizedBox(
-                                    height: 10,
-                                    width: 10,
+                                    height: 15,
+                                    width: 15,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       color: Theme.of(context).primaryColor,
