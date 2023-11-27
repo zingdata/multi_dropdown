@@ -464,7 +464,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       updateOverlay = true;
     }
     if (updateOverlay) {
-      _overlayEntry?.markNeedsBuild();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _overlayEntry?.markNeedsBuild();
+        setState(() {});
+      });
     }
 
     super.didUpdateWidget(oldWidget);
