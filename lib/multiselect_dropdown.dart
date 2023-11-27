@@ -828,7 +828,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                   ? Center(
                                       child: Text(
                                         'No option to show',
-                                        style: Theme.of(context).textTheme.bodyLarge,
+                                        style: Theme.of(context).textTheme.bodyMedium,
                                       ),
                                     )
                                   : MediaQuery.removePadding(
@@ -859,12 +859,15 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                                     (element) => element.label == option.label) !=
                                                 null;
                                             final primaryColor = Theme.of(context).primaryColor;
-                                            return _buildOption(
-                                              option,
-                                              primaryColor,
-                                              isSelected,
-                                              dropdownState,
-                                              selectedOptions,
+                                            return Material(
+                                              color: Colors.transparent,  
+                                              child: _buildOption(
+                                                option,
+                                                primaryColor,
+                                                isSelected,
+                                                dropdownState,
+                                                selectedOptions,
+                                              ),
                                             );
                                           },
                                         ),
