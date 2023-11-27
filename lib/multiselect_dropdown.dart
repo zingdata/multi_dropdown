@@ -925,7 +925,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       contentPadding: widget.optionsContentPadding,
       dense: true,
       tileColor: widget.optionsBackgroundColor ?? Colors.white,
-      selectedTileColor: widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
+      selectedTileColor: widget.showSelectedIconOnTrailing
+          ? Colors.transparent
+          : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
       shape: widget.selectedOptionShapeBorder,
       enabled:
           !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
