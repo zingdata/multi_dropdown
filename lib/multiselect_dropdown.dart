@@ -799,57 +799,80 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                           const Divider(height: 1),
                         ],
                         Expanded(
-                          child: widget.gettingOptions
+                          child: widget.gettingOptions && options.isEmpty
                               ? Align(
-                                  alignment:
-                                      options.isEmpty ? Alignment.center : Alignment.topCenter,
+                                  alignment: Alignment.center,
                                   child: SizedBox(
-                                    height: 25,
-                                    width: 25,
+                                    height: 10,
+                                    width: 10,
                                     child: CircularProgressIndicator(
+                                      strokeWidth: 2,
                                       color: Theme.of(context).primaryColor,
                                     ),
                                   ),
                                 )
-                              : MediaQuery.removePadding(
-                                  context: context,
-                                  removeTop: true,
-                                  child: NotificationListener<ScrollEndNotification>(
-                                    onNotification: (scrollEnd) {
-                                      final metrics = scrollEnd.metrics;
-                                      if (metrics.atEdge &&
-                                          widget.reachedMaxOptionsScroll != null) {
-                                        bool isTop = metrics.pixels == 0;
-                                        if (!isTop) {
-                                          widget.reachedMaxOptionsScroll!();
-                                        }
-                                      }
-                                      return true;
-                                    },
-                                    child: ListView.separated(
-                                      separatorBuilder: (context, index) {
-                                        return widget.optionSeparator ?? const SizedBox(height: 0);
-                                      },
-                                      padding: EdgeInsets.zero,
-                                      itemCount: options.length,
-                                      itemBuilder: (context, index) {
-                                        final option = options[index];
-                                        final isSelected = selectedOptions.firstWhereOrNull(
-                                                (element) => element.label == option.label) !=
-                                            null;
-                                        final primaryColor = Theme.of(context).primaryColor;
-                                        return _buildOption(
-                                          option,
-                                          primaryColor,
-                                          isSelected,
-                                          dropdownState,
-                                          selectedOptions,
-                                        );
-                                      },
+                              : options.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        'No option to show',
+                                        style: Theme.of(context).textTheme.bodyLarge,
+                                      ),
+                                    )
+                                  : MediaQuery.removePadding(
+                                      context: context,
+                                      removeTop: true,
+                                      child: NotificationListener<ScrollEndNotification>(
+                                        onNotification: (scrollEnd) {
+                                          final metrics = scrollEnd.metrics;
+                                          if (metrics.atEdge &&
+                                              widget.reachedMaxOptionsScroll != null) {
+                                            bool isTop = metrics.pixels == 0;
+                                            if (!isTop) {
+                                              widget.reachedMaxOptionsScroll!();
+                                            }
+                                          }
+                                          return true;
+                                        },
+                                        child: ListView.separated(
+                                          separatorBuilder: (context, index) {
+                                            return widget.optionSeparator ??
+                                                const SizedBox(height: 0);
+                                          },
+                                          padding: EdgeInsets.zero,
+                                          itemCount: options.length,
+                                          itemBuilder: (context, index) {
+                                            final option = options[index];
+                                            final isSelected = selectedOptions.firstWhereOrNull(
+                                                    (element) => element.label == option.label) !=
+                                                null;
+                                            final primaryColor = Theme.of(context).primaryColor;
+                                            return _buildOption(
+                                              option,
+                                              primaryColor,
+                                              isSelected,
+                                              dropdownState,
+                                              selectedOptions,
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
                         ),
+                        if (options.isNotEmpty && widget.gettingOptions) ...[
+                          const SizedBox(height: 6),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                        ]
                       ],
                     ),
                   )),
