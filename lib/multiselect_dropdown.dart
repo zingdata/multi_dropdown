@@ -357,7 +357,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   void initState() {
     super.initState();
-    _initialize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initialize();
+    });
     _focusNode = widget.focusNode ?? FocusNode();
     if (widget.controller != null) {
       _controller = widget.controller;
@@ -386,8 +388,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Adds the selected options and disabled options to the options list.
   void _addOptions() {
-    _selectedOptions.addAll(widget.selectedOptions);
-    _disabledOptions.addAll(widget.disabledOptions);
+    setState(() {
+      _selectedOptions.addAll(widget.selectedOptions);
+      _disabledOptions.addAll(widget.disabledOptions);
+    });
 
     if (_controller != null) {
       _controller!.setOptions(_options);
