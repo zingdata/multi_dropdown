@@ -357,6 +357,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   void initState() {
     super.initState();
+    _setupOptions();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initialize();
     });
@@ -369,7 +370,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Initializes the options, selected options and disabled options.
   /// If the options are fetched from the network, then the network call is made.
   /// If the options are passed as a parameter, then the options are initialized.
-  void _initialize() async {
+  void _setupOptions() async {
     if (!mounted) return;
     if (widget.networkConfig?.url != null) {
       await _fetchNetwork();
@@ -377,6 +378,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _options.addAll(widget.options);
     }
     _addOptions();
+  }
+
+  void _initialize() async {
     _overlayState ??= Overlay.of(context);
     _focusNode.addListener(_handleFocusChange);
 
@@ -816,6 +820,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                             ),
                           ),
                           const Divider(height: 1),
+                          const SizedBox(height: 6),
                         ],
                         Expanded(
                           child: widget.gettingOptions && options.isEmpty
