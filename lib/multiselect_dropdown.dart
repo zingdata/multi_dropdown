@@ -723,6 +723,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     // Get the showOnTop value from the second item in the values list
     final showOnTop = values[1] as bool;
 
+    final searchController = TextEditingController();
+
     // Get the visual density of the theme
     // final visualDensity = Theme.of(context).visualDensity;
 
@@ -744,7 +746,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     return OverlayEntry(builder: (context) {
       List<ValueItem<T>> options = _options;
       List<ValueItem<T>> selectedOptions = [..._selectedOptions];
-      final searchController = TextEditingController();
 
       return StatefulBuilder(builder: ((context, dropdownState) {
         return Stack(
@@ -808,13 +809,13 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                   ),
                               onChanged: (value) {
                                 debugPrint('search value changed: $value');
+                                if (widget.onSearch != null) widget.onSearch!(value);
                                 dropdownState(() {
                                   options = _options
                                       .where((element) =>
                                           element.label.toLowerCase().contains(value.toLowerCase()))
                                       .toList();
                                 });
-                                if (widget.onSearch != null) widget.onSearch!(value);
                               },
                             ),
                           ),
