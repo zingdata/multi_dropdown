@@ -806,17 +806,16 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                       },
                                     ),
                                   ),
-                              onChanged: widget.onSearch ??
-                                  (value) {
-                                    debugPrint('search value changed: $value');
-                                    dropdownState(() {
-                                      options = _options
-                                          .where((element) => element.label
-                                              .toLowerCase()
-                                              .contains(value.toLowerCase()))
-                                          .toList();
-                                    });
-                                  },
+                              onChanged: (value) {
+                                debugPrint('search value changed: $value');
+                                dropdownState(() {
+                                  options = _options
+                                      .where((element) =>
+                                          element.label.toLowerCase().contains(value.toLowerCase()))
+                                      .toList();
+                                });
+                                if (widget.onSearch != null) widget.onSearch!(value);
+                              },
                             ),
                           ),
                           const Divider(height: 1),
