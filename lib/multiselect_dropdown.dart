@@ -352,7 +352,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   dynamic _reponseBody;
 
   /// value notifier that is used for controller.
-  MultiSelectController<T>? _controller = MultiSelectController<T>();
+  MultiSelectController<T>? _controller;
 
   /// search field focus node
   FocusNode? _searchFocusNode;
@@ -393,9 +393,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
     if (widget.showDropDownOnStart) {
       Future.delayed(const Duration(milliseconds: 400)).then((value) {
-        if (mounted) {
-          _controller?.showDropdown();
-        }
+        _focusNode.requestFocus();
       });
     }
   }
@@ -489,8 +487,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
     if (needUpdate) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        _controller?.notifyListeners();
         setState(() {});
         _overlayEntry?.markNeedsBuild();
       });
@@ -1203,26 +1199,21 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
   /// select the options
   /// [MultiSelectController] is used to select the options.
-  void setSelectedOptions(
-    List<ValueItem<T>> options, {
-    bool notify = false,
-  }) {
+  void setSelectedOptions(List<ValueItem<T>> options) {
     if (options.any((option) =>
         value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
         null)) {
       throw Exception('Cannot select disabled options');
     }
 
-    // if (options.any((element) =>
-    //     value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
-    //   throw Exception('Cannot select options that are not in the options list');
-    // }
+    if (options.any((element) =>
+        value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
+      throw Exception('Cannot select options that are not in the options list');
+    }
 
     value._selectedOptions.clear();
     value._selectedOptions.addAll(options);
-    if (notify) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   /// add selected option
@@ -1243,10 +1234,7 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
   /// set disabled options
   /// [MultiSelectController] is used to set disabled options.
-  void setDisabledOptions(
-    List<ValueItem<T>> disabledOptions, {
-    bool notify = false,
-  }) {
+  void setDisabledOptions(List<ValueItem<T>> disabledOptions) {
     if (disabledOptions.any((element) =>
         value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
       throw Exception('Cannot disable options that are not in the options list');
@@ -1254,39 +1242,27 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
     value._disabledOptions.clear();
     value._disabledOptions.addAll(disabledOptions);
-    if (notify) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   /// setDisabledOption method
   /// [MultiSelectController] is used to set disabled option.
-  void setDisabledOption(
-    ValueItem<T> disabledOption, {
-    bool notify = false,
-  }) {
+  void setDisabledOption(ValueItem<T> disabledOption) {
     if (value._options.firstWhereOrNull((element) => element.label == disabledOption.label) ==
         null) {
       throw Exception('Cannot disable option that is not in the options list');
     }
 
     value._disabledOptions.add(disabledOption);
-    if (notify) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   /// set options
   /// [MultiSelectController] is used to set options.
-  void setOptions(
-    List<ValueItem<T>> options, {
-    bool notify = false,
-  }) {
+  void setOptions(List<ValueItem<T>> options) {
     value._options.clear();
     value._options.addAll(options);
-    if (notify) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   /// get disabled options
