@@ -392,7 +392,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _searchFocusNode!.addListener(_handleFocusChange);
     }
     if (widget.showDropDownOnStart) {
-      _controller?.showDropdown();
+      Future.delayed(const Duration(milliseconds: 400)).then((value) {
+        if (context.mounted) {
+          _controller?.showDropdown();
+        }
+      });
     }
   }
 
