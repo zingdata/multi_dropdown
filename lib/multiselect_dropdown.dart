@@ -489,6 +489,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
     if (needUpdate) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+        _controller?.notifyListeners();
         setState(() {});
         _overlayEntry?.markNeedsBuild();
       });
@@ -1201,7 +1203,10 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
   /// select the options
   /// [MultiSelectController] is used to select the options.
-  void setSelectedOptions(List<ValueItem<T>> options) {
+  void setSelectedOptions(
+    List<ValueItem<T>> options, {
+    bool notify = false,
+  }) {
     if (options.any((option) =>
         value._disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
         null)) {
@@ -1215,7 +1220,9 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
     value._selectedOptions.clear();
     value._selectedOptions.addAll(options);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   /// add selected option
@@ -1236,7 +1243,10 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
   /// set disabled options
   /// [MultiSelectController] is used to set disabled options.
-  void setDisabledOptions(List<ValueItem<T>> disabledOptions) {
+  void setDisabledOptions(
+    List<ValueItem<T>> disabledOptions, {
+    bool notify = false,
+  }) {
     if (disabledOptions.any((element) =>
         value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
       throw Exception('Cannot disable options that are not in the options list');
@@ -1244,27 +1254,39 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
 
     value._disabledOptions.clear();
     value._disabledOptions.addAll(disabledOptions);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   /// setDisabledOption method
   /// [MultiSelectController] is used to set disabled option.
-  void setDisabledOption(ValueItem<T> disabledOption) {
+  void setDisabledOption(
+    ValueItem<T> disabledOption, {
+    bool notify = false,
+  }) {
     if (value._options.firstWhereOrNull((element) => element.label == disabledOption.label) ==
         null) {
       throw Exception('Cannot disable option that is not in the options list');
     }
 
     value._disabledOptions.add(disabledOption);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   /// set options
   /// [MultiSelectController] is used to set options.
-  void setOptions(List<ValueItem<T>> options) {
+  void setOptions(
+    List<ValueItem<T>> options, {
+    bool notify = false,
+  }) {
     value._options.clear();
     value._options.addAll(options);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   /// get disabled options
