@@ -1208,10 +1208,10 @@ class MultiSelectController<T> extends ValueNotifier<_MultiSelectController<T>> 
       throw Exception('Cannot select disabled options');
     }
 
-    if (options.any((element) =>
-        value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
-      throw Exception('Cannot select options that are not in the options list');
-    }
+    // if (options.any((element) =>
+    //     value._options.firstWhereOrNull((option) => element.label == option.label) == null)) {
+    //   throw Exception('Cannot select options that are not in the options list');
+    // }
 
     value._selectedOptions.clear();
     value._selectedOptions.addAll(options);
