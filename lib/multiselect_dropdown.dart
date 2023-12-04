@@ -357,14 +357,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   void initState() {
     super.initState();
-    _setupOptions();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initialize();
-    });
     _focusNode = widget.focusNode ?? FocusNode();
     if (widget.controller != null) {
       _controller = widget.controller;
     }
+    _setupOptions();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initialize();
+    });
   }
 
   /// Initializes the options, selected options and disabled options.
