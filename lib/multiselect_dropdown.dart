@@ -74,6 +74,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final EdgeInsets? padding;
   final bool showClearIcon;
   final int? maxItems;
+  final bool showDropDownOnStart;
 
   // network configuration
   final NetworkConfig? networkConfig;
@@ -250,6 +251,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
+    this.showDropDownOnStart = false,
     this.reachedMaxOptionsScroll,
     this.gettingOptions = false,
     this.onShowOverlay,
@@ -315,6 +317,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchBoxPadding,
     this.onSearch,
     this.dropDownBoxDecoration,
+    this.showDropDownOnStart = false,
     this.reachedMaxOptionsScroll,
     this.onShowOverlay,
     this.gettingOptions = false,
@@ -349,7 +352,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   dynamic _reponseBody;
 
   /// value notifier that is used for controller.
-  MultiSelectController<T>? _controller;
+  MultiSelectController<T>? _controller = MultiSelectController<T>();
 
   /// search field focus node
   FocusNode? _searchFocusNode;
@@ -387,6 +390,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (widget.searchEnabled) {
       _searchFocusNode = FocusNode();
       _searchFocusNode!.addListener(_handleFocusChange);
+    }
+    if (widget.showDropDownOnStart) {
+      _controller?.showDropdown();
     }
   }
 
