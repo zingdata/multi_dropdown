@@ -393,7 +393,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
     if (widget.showDropDownOnStart) {
       Future.delayed(const Duration(milliseconds: 400)).then((value) {
-        if (context.mounted) {
+        if (mounted) {
           _controller?.showDropdown();
         }
       });
