@@ -95,7 +95,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final EdgeInsets? searchBoxPadding;
   final InputDecoration? searchInputDecoration;
   final TextInputType? searchKeyboardType;
-  final Function(String value)? onSearch;
+  final Function(String value, List<ValueItem<T>> searchedOptions)? onSearch;
   final VoidCallback? reachedMaxOptionsScroll;
   final Function(OverlayEntry? overlayEntry)? onShowOverlay;
   final bool gettingOptions;
@@ -822,12 +822,13 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                   ),
                               onChanged: (value) {
                                 debugPrint('search value changed: $value');
-                                if (widget.onSearch != null) widget.onSearch!(value);
+
                                 dropdownState(() {
                                   options = _options
                                       .where((element) =>
                                           element.label.toLowerCase().contains(value.toLowerCase()))
                                       .toList();
+                                  if (widget.onSearch != null) widget.onSearch!(value, options);
                                 });
                               },
                             ),
@@ -869,7 +870,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           }
                                           return true;
                                         },
-                                        child: ListView.separated(  
+                                        child: ListView.separated(
                                           separatorBuilder: (context, index) {
                                             return widget.optionSeparator ??
                                                 const SizedBox.shrink();
@@ -902,7 +903,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                     ),
                         ),
                         if (options.isNotEmpty && widget.gettingOptions) ...[
-                    
                           Align(
                             alignment: Alignment.topCenter,
                             child: SizedBox(
