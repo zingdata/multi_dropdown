@@ -870,12 +870,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           }
                                           return true;
                                         },
-                                        child: ListView.separated(
+                                        child: ListView.separated(  
                                           separatorBuilder: (context, index) {
                                             return widget.optionSeparator ??
                                                 const SizedBox.shrink();
                                           },
-                                          padding: EdgeInsets.zero,
+                                          padding: const EdgeInsets.symmetric(vertical: 8),
                                           itemCount: options.length,
                                           itemBuilder: (context, index) {
                                             final option = options[index];
