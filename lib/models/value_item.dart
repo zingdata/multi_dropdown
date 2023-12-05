@@ -10,12 +10,17 @@ import 'dart:convert';
 class ValueItem<T> {
   /// The label of the value item
   final String label;
+  final String? icon;
 
   /// The value of the value item
   final T? value;
 
   /// Default constructor for [ValueItem]
-  const ValueItem({required this.label, required this.value});
+  const ValueItem({
+    required this.label,
+    required this.value,
+    this.icon,
+  });
 
   /// toString method for [ValueItem]
   @override
@@ -28,6 +33,7 @@ class ValueItem<T> {
     return {
       'label': label,
       'value': value,
+      'icon': icon,
     };
   }
 
@@ -36,6 +42,7 @@ class ValueItem<T> {
     return ValueItem<T>(
       label: map['label'] ?? '',
       value: map['value'],
+      icon: map['icon'],
     );
   }
 
@@ -43,17 +50,14 @@ class ValueItem<T> {
   String toJson() => json.encode(toMap());
 
   /// fromJson method for [ValueItem]
-  factory ValueItem.fromJson(String source) =>
-      ValueItem<T>.fromMap(json.decode(source));
+  factory ValueItem.fromJson(String source) => ValueItem<T>.fromMap(json.decode(source));
 
   /// Equality operator for [ValueItem]
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ValueItem<T> &&
-        other.label == label &&
-        other.value == value;
+    return other is ValueItem<T> && other.label == label && other.value == value;
   }
 
   /// Hashcode for [ValueItem]

@@ -101,7 +101,6 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final bool gettingOptions;
   final EdgeInsets? optionsContentPadding;
   final EdgeInsets optionItemPadding;
-  final Widget? Function(BuildContext, int)? optionItemBuilder;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -257,7 +256,6 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.gettingOptions = false,
     this.onShowOverlay,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
-    this.optionItemBuilder,
     this.optionsContentPadding,
   })  : networkConfig = null,
         responseParser = null,
@@ -325,7 +323,6 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.gettingOptions = false,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
-    this.optionItemBuilder,
   })  : options = const [],
         super(key: key);
 
@@ -706,9 +703,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Get the selectedItem icon for the dropdown
-  Widget? _getSelectedIcon(bool isSelected, Color primaryColor) {
+  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, String? optionIcon) {
     if (!widget.alwaysShowOptionIcon) {
       return null;
+    }
+    if (optionIcon != null) {
+      return Image.asset(optionIcon, width: 24, height: 24);
     }
     if (isSelected) {
       return widget.selectedOptionIcon ??
@@ -877,29 +877,27 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           },
                                           padding: EdgeInsets.zero,
                                           itemCount: options.length,
-                                          itemBuilder: widget.optionItemBuilder ??
-                                              (context, index) {
-                                                final option = options[index];
-                                                final isSelected = selectedOptions.firstWhereOrNull(
-                                                        (element) =>
-                                                            element.label == option.label) !=
-                                                    null;
-                                                final primaryColor = Theme.of(context).primaryColor;
-                                                return Padding(
-                                                  padding: widget.optionItemPadding,
-                                                  child: Material(
-                                                    color: Colors.transparent,
-                                                    borderRadius: BorderRadius.circular(6),
-                                                    child: _buildOption(
-                                                      option,
-                                                      primaryColor,
-                                                      isSelected,
-                                                      dropdownState,
-                                                      selectedOptions,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
+                                          itemBuilder: (context, index) {
+                                            final option = options[index];
+                                            final isSelected = selectedOptions.firstWhereOrNull(
+                                                    (element) => element.label == option.label) !=
+                                                null;
+                                            final primaryColor = Theme.of(context).primaryColor;
+                                            return Padding(
+                                              padding: widget.optionItemPadding,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                borderRadius: BorderRadius.circular(6),
+                                                child: _buildOption(
+                                                  option,
+                                                  primaryColor,
+                                                  isSelected,
+                                                  dropdownState,
+                                                  selectedOptions,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -991,10 +989,20 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
         widget.onOptionSelected?.call(_selectedOptions);
       },
-      trailing:
-          widget.showSelectedIconOnTrailing ? _getSelectedIcon(isSelected, primaryColor) : null,
-      leading:
-          !widget.showSelectedIconOnTrailing ? _getSelectedIcon(isSelected, primaryColor) : null,
+      trailing: widget.showSelectedIconOnTrailing
+          ? _getSelectedIcon(
+              isSelected,
+              primaryColor,
+              option.icon,
+            )
+          : null,
+      leading: !widget.showSelectedIconOnTrailing
+          ? _getSelectedIcon(
+              isSelected,
+              primaryColor,
+              option.icon,
+            )
+          : null,
     );
   }
 
