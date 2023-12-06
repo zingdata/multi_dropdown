@@ -418,7 +418,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Handles the focus change to show/hide the dropdown.
   _handleFocusChange() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       if (_focusNode.hasFocus && mounted) {
         _overlayEntry = _reponseBody != null && widget.networkConfig != null
             ? _buildNetworkErrorOverlayEntry()
