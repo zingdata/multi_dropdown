@@ -418,31 +418,33 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Handles the focus change to show/hide the dropdown.
   _handleFocusChange() {
-    if (_focusNode.hasFocus && mounted) {
-      _overlayEntry = _reponseBody != null && widget.networkConfig != null
-          ? _buildNetworkErrorOverlayEntry()
-          : _buildOverlayEntry();
-      Overlay.of(context).insert(_overlayEntry!);
-      if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
-      return;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_focusNode.hasFocus && mounted) {
+        _overlayEntry = _reponseBody != null && widget.networkConfig != null
+            ? _buildNetworkErrorOverlayEntry()
+            : _buildOverlayEntry();
+        Overlay.of(context).insert(_overlayEntry!);
+        if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
+        return;
+      }
 
-    if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
-        _overlayEntry != null) {
-      _overlayEntry?.remove();
-      if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
-    }
+      if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
+          _overlayEntry != null) {
+        _overlayEntry?.remove();
+        if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+      }
 
-    if (mounted) {
-      setState(() {
-        _selectionMode = _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
-      });
-    }
+      if (mounted) {
+        setState(() {
+          _selectionMode = _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
+        });
+      }
 
-    if (_controller != null) {
-      _controller!.value._isDropdownOpen =
-          _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
-    }
+      if (_controller != null) {
+        _controller!.value._isDropdownOpen =
+            _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
+      }
+    });
   }
 
   /// Handles the widget rebuild when the options are changed externally.
