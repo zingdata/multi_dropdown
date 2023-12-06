@@ -17,9 +17,10 @@ class SelectionChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Chip(
       padding: chipConfig.padding,
-      label: Text(item.label),
+      label: Text(item.label, style: textTheme.bodyMedium),
       shape: chipConfig.outlineBorder ??
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
@@ -31,7 +32,7 @@ class SelectionChip<T> extends StatelessWidget {
       labelPadding: chipConfig.labelPadding,
       backgroundColor: chipConfig.backgroundColor ?? Theme.of(context).primaryColor,
       labelStyle: chipConfig.labelStyle ?? TextStyle(color: chipConfig.labelColor, fontSize: 14),
-      onDeleted: () => onItemDelete(item),
+      onDeleted: chipConfig.canDelete ? () => onItemDelete(item) : null,
     );
   }
 }
