@@ -37,7 +37,7 @@ import '../enum/app_enums.dart';
 /// ```
 
 class ChipConfig {
-  final Icon? deleteIcon;
+  final Widget? deleteIcon;
 
   final Color deleteIconColor;
   final Color labelColor;
