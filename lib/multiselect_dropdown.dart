@@ -357,6 +357,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// search field focus node
   FocusNode? _searchFocusNode;
 
+  final _chipScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -621,6 +623,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   Widget _buildSelectedItems() {
     if (widget.chipConfig.wrapType == WrapType.scroll) {
       return ListView.separated(
+        controller: _chipScrollController,
         separatorBuilder: (context, index) => _getChipSeparator(widget.chipConfig),
         scrollDirection: Axis.horizontal,
         itemCount: _selectedOptions.length,
@@ -635,14 +638,15 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       );
     }
     return Wrap(
-        spacing: widget.chipConfig.spacing,
-        runSpacing: widget.chipConfig.runSpacing,
-        children: mapIndexed(_selectedOptions, (index, item) {
-          if (widget.selectedItemBuilder != null) {
-            return widget.selectedItemBuilder!(context, _selectedOptions[index]);
-          }
-          return _buildChip(_selectedOptions[index], widget.chipConfig);
-        }).toList());
+      spacing: widget.chipConfig.spacing,
+      runSpacing: widget.chipConfig.runSpacing,
+      children: mapIndexed(_selectedOptions, (index, item) {
+        if (widget.selectedItemBuilder != null) {
+          return widget.selectedItemBuilder!(context, _selectedOptions[index]);
+        }
+        return _buildChip(_selectedOptions[index], widget.chipConfig);
+      }).toList(),
+    );
   }
 
   /// Util method to map with index.
@@ -971,6 +975,13 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               _selectedOptions.add(option);
             });
           }
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (widget.chipConfig.wrapType == WrapType.scroll &&
+                _chipScrollController.positions.isNotEmpty) {
+              _chipScrollController.animateTo(_chipScrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300), curve: Curves.easeInToLinear);
+            }
+          });
         } else {
           dropdownState(() {
             selectedOptions.clear();
