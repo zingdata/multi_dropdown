@@ -876,34 +876,38 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           }
                                           return true;
                                         },
-                                        child: ListView.separated(
-                                          separatorBuilder: (context, index) {
-                                            return widget.optionSeparator ??
-                                                const SizedBox.shrink();
-                                          },
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
-                                          itemCount: options.length,
-                                          itemBuilder: (context, index) {
-                                            final option = options[index];
-                                            final isSelected = selectedOptions.firstWhereOrNull(
-                                                    (element) => element.label == option.label) !=
-                                                null;
-                                            final primaryColor = Theme.of(context).primaryColor;
-                                            return Padding(
-                                              padding: widget.optionItemPadding,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                borderRadius: BorderRadius.circular(6),
-                                                child: _buildOption(
-                                                  option,
-                                                  primaryColor,
-                                                  isSelected,
-                                                  dropdownState,
-                                                  selectedOptions,
+                                        child: Scrollbar(
+                                          interactive: true,  
+                                          showTrackOnHover: false,
+                                          child: ListView.separated(
+                                            separatorBuilder: (context, index) {
+                                              return widget.optionSeparator ??
+                                                  const SizedBox.shrink();
+                                            },
+                                            padding: const EdgeInsets.symmetric(vertical: 8),
+                                            itemCount: options.length,
+                                            itemBuilder: (context, index) {
+                                              final option = options[index];
+                                              final isSelected = selectedOptions.firstWhereOrNull(
+                                                      (element) => element.label == option.label) !=
+                                                  null;
+                                              final primaryColor = Theme.of(context).primaryColor;
+                                              return Padding(
+                                                padding: widget.optionItemPadding,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius.circular(6),
+                                                  child: _buildOption(
+                                                    option,
+                                                    primaryColor,
+                                                    isSelected,
+                                                    dropdownState,
+                                                    selectedOptions,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
