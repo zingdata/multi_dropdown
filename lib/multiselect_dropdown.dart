@@ -784,7 +784,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
+                    constraints: BoxConstraints(
+                      maxWidth: size.width,
+                      maxHeight: widget.dropdownHeight,
+                    ),
                     decoration: widget.dropDownBoxDecoration,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -877,8 +880,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                       },
                                       child: ListView.separated(
                                         separatorBuilder: (context, index) {
-                                          return widget.optionSeparator ??
-                                              const SizedBox.shrink();
+                                          return widget.optionSeparator ?? const SizedBox.shrink();
                                         },
                                         padding: const EdgeInsets.symmetric(vertical: 8),
                                         itemCount: options.length,
