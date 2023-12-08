@@ -878,7 +878,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                         },
                                         child: Scrollbar(
                                           interactive: true,  
-                                          showTrackOnHover: false,
+                                          thumbVisibility: true,
                                           child: ListView.separated(
                                             separatorBuilder: (context, index) {
                                               return widget.optionSeparator ??
