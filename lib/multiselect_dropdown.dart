@@ -785,173 +785,164 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               targetAnchor: showOnTop ? Alignment.topLeft : Alignment.bottomLeft,
               followerAnchor: showOnTop ? Alignment.bottomLeft : Alignment.topLeft,
               child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
-                    decoration: widget.dropDownBoxDecoration,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (widget.searchEnabled) ...[
-                          Container(
-                            height: widget.searchBoxHeight,
-                            padding: widget.searchBoxPadding ?? const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              controller: searchController,
-                              focusNode: _searchFocusNode,
-                              keyboardType: widget.searchKeyboardType,
-                              decoration: widget.searchInputDecoration ??
-                                  InputDecoration(
-                                    fillColor: Colors.grey.shade200,
-                                    isDense: true,
-                                    hintText: 'Search',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        searchController.clear();
-                                        dropdownState(() {
-                                          options = _options;
-                                        });
-                                      },
+                color: Colors.transparent,
+                child: Container(
+                  constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
+                  decoration: widget.dropDownBoxDecoration,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.searchEnabled) ...[
+                        Container(
+                          height: widget.searchBoxHeight,
+                          padding: widget.searchBoxPadding ?? const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            controller: searchController,
+                            focusNode: _searchFocusNode,
+                            keyboardType: widget.searchKeyboardType,
+                            decoration: widget.searchInputDecoration ??
+                                InputDecoration(
+                                  fillColor: Colors.grey.shade200,
+                                  isDense: true,
+                                  hintText: 'Search',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                      width: 0.8,
                                     ),
                                   ),
-                              onChanged: (value) {
-                                debugPrint('search value changed: $value');
-                                dropdownState(() {
-                                  options = _options
-                                      .where((element) =>
-                                          element.label.toLowerCase().contains(value.toLowerCase()))
-                                      .toList();
-                                  if (widget.onSearch != null) widget.onSearch!(value, options);
-                                });
-                              },
-                              onSaved: widget.allowCustomValues
-                                  ? (value) {
-                                      if (value == null) return;
-                                      onDropDownOptionTap(
-                                        ValueItem<T>(label: value, value: value as T),
-                                        false,
-                                        dropdownState,
-                                        selectedOptions,
-                                      );
-                                    }
-                                  : null,
-                              onFieldSubmitted: widget.allowCustomValues
-                                  ? (value) {
-                                      onDropDownOptionTap(
-                                        ValueItem<T>(label: value, value: value as T),
-                                        false,
-                                        dropdownState,
-                                        selectedOptions,
-                                      );
-                                    }
-                                  : null,
-                            ),
-                          ),
-                          const Divider(height: 1),
-                        ],
-                        Expanded(
-                          child: widget.gettingOptions && options.isEmpty
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: SizedBox(
-                                    height: 15,
-                                    width: 15,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor,
+                                      width: 0.8,
                                     ),
                                   ),
-                                )
-                              : options.isEmpty
-                                  ? Center(
-                                      child: Text(
-                                        'No option to show',
-                                        style: Theme.of(context).textTheme.bodyMedium,
-                                      ),
-                                    )
-                                  : MediaQuery.removePadding(
-                                      context: context,
-                                      removeTop: true,
-                                      child: NotificationListener<ScrollEndNotification>(
-                                        onNotification: (scrollEnd) {
-                                          final metrics = scrollEnd.metrics;
-                                          if (metrics.atEdge &&
-                                              widget.reachedMaxOptionsScroll != null) {
-                                            bool isTop = metrics.pixels == 0;
-                                            if (!isTop) {
-                                              widget.reachedMaxOptionsScroll!();
-                                            }
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      searchController.clear();
+                                      dropdownState(() {
+                                        options = _options;
+                                      });
+                                    },
+                                  ),
+                                ),
+                            onChanged: (value) {
+                              debugPrint('search value changed: $value');
+                              dropdownState(() {
+                                options = _options
+                                    .where((element) =>
+                                        element.label.toLowerCase().contains(value.toLowerCase()))
+                                    .toList();
+                                if (widget.onSearch != null) widget.onSearch!(value, options);
+                              });
+                            },
+                            onFieldSubmitted: widget.allowCustomValues
+                                ? (value) {
+                                    onDropDownOptionTap(
+                                      ValueItem<T>(label: value, value: value as T),
+                                      false,
+                                      dropdownState,
+                                      selectedOptions,
+                                    );
+                                  }
+                                : null,
+                          ),
+                        ),
+                        const Divider(height: 1),
+                      ],
+                      Expanded(
+                        child: widget.gettingOptions && options.isEmpty
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              )
+                            : options.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'No option to show',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  )
+                                : MediaQuery.removePadding(
+                                    context: context,
+                                    removeTop: true,
+                                    child: NotificationListener<ScrollEndNotification>(
+                                      onNotification: (scrollEnd) {
+                                        final metrics = scrollEnd.metrics;
+                                        if (metrics.atEdge &&
+                                            widget.reachedMaxOptionsScroll != null) {
+                                          bool isTop = metrics.pixels == 0;
+                                          if (!isTop) {
+                                            widget.reachedMaxOptionsScroll!();
                                           }
-                                          return true;
-                                        },
-                                        child: Scrollbar(
-                                          interactive: true,
-                                          thumbVisibility: true,
-                                          child: ListView.separated(
-                                            separatorBuilder: (context, index) {
-                                              return widget.optionSeparator ??
-                                                  const SizedBox.shrink();
-                                            },
-                                            padding: const EdgeInsets.symmetric(vertical: 8),
-                                            itemCount: options.length,
-                                            itemBuilder: (context, index) {
-                                              final option = options[index];
-                                              final isSelected = selectedOptions.firstWhereOrNull(
-                                                      (element) => element.label == option.label) !=
-                                                  null;
-                                              final primaryColor = Theme.of(context).primaryColor;
-                                              return Padding(
-                                                padding: widget.optionItemPadding,
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  borderRadius: BorderRadius.circular(6),
-                                                  child: _buildOption(
-                                                    option,
-                                                    primaryColor,
-                                                    isSelected,
-                                                    dropdownState,
-                                                    selectedOptions,
-                                                  ),
+                                        }
+                                        return true;
+                                      },
+                                      child: Scrollbar(
+                                        interactive: true,
+                                        thumbVisibility: true,
+                                        child: ListView.separated(
+                                          separatorBuilder: (context, index) {
+                                            return widget.optionSeparator ??
+                                                const SizedBox.shrink();
+                                          },
+                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                          itemCount: options.length,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            final option = options[index];
+                                            final isSelected = selectedOptions.firstWhereOrNull(
+                                                    (element) => element.label == option.label) !=
+                                                null;
+                                            final primaryColor = Theme.of(context).primaryColor;
+                                            return Padding(
+                                              padding: widget.optionItemPadding,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                borderRadius: BorderRadius.circular(6),
+                                                child: _buildOption(
+                                                  option,
+                                                  primaryColor,
+                                                  isSelected,
+                                                  dropdownState,
+                                                  selectedOptions,
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
-                        ),
-                        if (options.isNotEmpty && widget.gettingOptions) ...[
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: SizedBox(
-                              height: 10,
-                              width: 10,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                                  ),
+                      ),
+                      if (options.isNotEmpty && widget.gettingOptions) ...[
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
-                          const SizedBox(height: 6),
-                        ]
-                      ],
-                    ),
-                  )),
+                        ),
+                        const SizedBox(height: 6),
+                      ]
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
