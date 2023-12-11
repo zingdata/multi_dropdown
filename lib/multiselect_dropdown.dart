@@ -101,6 +101,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final bool gettingOptions;
   final EdgeInsets? optionsContentPadding;
   final EdgeInsets optionItemPadding;
+  final bool allowCustomValues;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -257,6 +258,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.onShowOverlay,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
+    this.allowCustomValues = false,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -323,6 +325,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.gettingOptions = false,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
+    this.allowCustomValues = false,
   })  : options = const [],
         super(key: key);
 
@@ -828,7 +831,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                   ),
                               onChanged: (value) {
                                 debugPrint('search value changed: $value');
-
                                 dropdownState(() {
                                   options = _options
                                       .where((element) =>
@@ -837,6 +839,17 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                   if (widget.onSearch != null) widget.onSearch!(value, options);
                                 });
                               },
+                              onSaved: widget.allowCustomValues
+                                  ? (value) {
+                                      if (value == null) return;
+                                      onDropDownOptionTap(
+                                        ValueItem<T>(label: value, value: value as T),
+                                        false,
+                                        dropdownState,
+                                        selectedOptions,
+                                      );
+                                    }
+                                  : null,
                             ),
                           ),
                           const Divider(height: 1),
@@ -877,7 +890,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           return true;
                                         },
                                         child: Scrollbar(
-                                          interactive: true,  
+                                          interactive: true,
                                           thumbVisibility: true,
                                           child: ListView.separated(
                                             separatorBuilder: (context, index) {
@@ -936,14 +949,70 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     });
   }
 
-  ListTile _buildOption(ValueItem<T> option, Color primaryColor, bool isSelected,
-      StateSetter dropdownState, List<ValueItem<T>> selectedOptions) {
+  void onDropDownOptionTap(
+      ValueItem<T> option, bool isSelected, StateSetter dropdownState, selectedOptions) {
+    if (widget.selectionType == SelectionType.multi) {
+      if (isSelected) {
+        dropdownState(() {
+          selectedOptions.remove(option);
+        });
+        setState(() {
+          _selectedOptions.remove(option);
+        });
+      } else {
+        final bool hasReachMax =
+            widget.maxItems == null ? false : (_selectedOptions.length + 1) > widget.maxItems!;
+        if (hasReachMax) return;
+
+        dropdownState(() {
+          selectedOptions.add(option);
+        });
+        setState(() {
+          _selectedOptions.add(option);
+        });
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.chipConfig.wrapType == WrapType.scroll &&
+            _chipScrollController.positions.isNotEmpty) {
+          _chipScrollController.animateTo(_chipScrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300), curve: Curves.easeInToLinear);
+        }
+      });
+    } else {
+      dropdownState(() {
+        selectedOptions.clear();
+        selectedOptions.add(option);
+      });
+      setState(() {
+        _selectedOptions.clear();
+        _selectedOptions.add(option);
+      });
+      _focusNode.unfocus();
+    }
+
+    if (_controller != null) {
+      _controller!.value._selectedOptions.clear();
+      _controller!.value._selectedOptions.addAll(_selectedOptions);
+    }
+
+    widget.onOptionSelected?.call(_selectedOptions);
+  }
+
+  ListTile _buildOption(
+    ValueItem<T> option,
+    Color primaryColor,
+    bool isSelected,
+    StateSetter dropdownState,
+    List<ValueItem<T>> selectedOptions,
+  ) {
     return ListTile(
-      title: Text(option.label,
-          style: widget.optionTextStyle ??
-              TextStyle(
-                fontSize: widget.hintFontSize,
-              )),
+      title: Text(
+        option.label,
+        style: widget.optionTextStyle ??
+            TextStyle(
+              fontSize: widget.hintFontSize,
+            ),
+      ),
       textColor: Colors.black,
       focusColor: Colors.red,
       selectedColor: widget.selectedOptionTextColor ?? primaryColor,
@@ -959,51 +1028,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       enabled:
           !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
       onTap: () {
-        if (widget.selectionType == SelectionType.multi) {
-          if (isSelected) {
-            dropdownState(() {
-              selectedOptions.remove(option);
-            });
-            setState(() {
-              _selectedOptions.remove(option);
-            });
-          } else {
-            final bool hasReachMax =
-                widget.maxItems == null ? false : (_selectedOptions.length + 1) > widget.maxItems!;
-            if (hasReachMax) return;
-
-            dropdownState(() {
-              selectedOptions.add(option);
-            });
-            setState(() {
-              _selectedOptions.add(option);
-            });
-          }
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (widget.chipConfig.wrapType == WrapType.scroll &&
-                _chipScrollController.positions.isNotEmpty) {
-              _chipScrollController.animateTo(_chipScrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300), curve: Curves.easeInToLinear);
-            }
-          });
-        } else {
-          dropdownState(() {
-            selectedOptions.clear();
-            selectedOptions.add(option);
-          });
-          setState(() {
-            _selectedOptions.clear();
-            _selectedOptions.add(option);
-          });
-          _focusNode.unfocus();
-        }
-
-        if (_controller != null) {
-          _controller!.value._selectedOptions.clear();
-          _controller!.value._selectedOptions.addAll(_selectedOptions);
-        }
-
-        widget.onOptionSelected?.call(_selectedOptions);
+        onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
       },
       trailing: widget.showSelectedIconOnTrailing
           ? _getSelectedIcon(
