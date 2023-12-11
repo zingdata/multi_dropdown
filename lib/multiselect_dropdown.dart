@@ -856,7 +856,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                         ),
                         const Divider(height: 1),
                       ],
-                      Expanded(
+                      Flexible(
                         child: widget.gettingOptions && options.isEmpty
                             ? Align(
                                 alignment: Alignment.center,
