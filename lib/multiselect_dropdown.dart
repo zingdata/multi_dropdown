@@ -850,6 +850,16 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                       );
                                     }
                                   : null,
+                              onFieldSubmitted: widget.allowCustomValues
+                                  ? (value) {
+                                      onDropDownOptionTap(
+                                        ValueItem<T>(label: value, value: value as T),
+                                        false,
+                                        dropdownState,
+                                        selectedOptions,
+                                      );
+                                    }
+                                  : null,
                             ),
                           ),
                           const Divider(height: 1),
