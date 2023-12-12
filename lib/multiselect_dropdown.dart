@@ -400,6 +400,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       Future.delayed(const Duration(milliseconds: 400)).then((value) {
         if (mounted) {
           _focusNode.requestFocus();
+          _searchFocusNode?.requestFocus();
         }
       });
     }
@@ -768,6 +769,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     return OverlayEntry(builder: (context) {
       List<ValueItem<T>> options = _options;
       List<ValueItem<T>> selectedOptions = [..._selectedOptions];
+      final _scrollBarController = ScrollController();
 
       return StatefulBuilder(builder: ((context, dropdownState) {
         return Stack(
@@ -844,7 +846,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                             },
                             onFieldSubmitted: widget.allowCustomValues
                                 ? (value) {
-                                    onDropDownOptionTap(
+                                    _onDropDownOptionTap(
                                       ValueItem<T>(label: value, value: value as T),
                                       false,
                                       dropdownState,
@@ -894,7 +896,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                       child: Scrollbar(
                                         interactive: true,
                                         thumbVisibility: true,
+                                        controller: _scrollBarController,
                                         child: ListView.separated(
+                                          controller: _scrollBarController,
                                           separatorBuilder: (context, index) {
                                             return widget.optionSeparator ??
                                                 const SizedBox.shrink();
@@ -953,7 +957,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     });
   }
 
-  void onDropDownOptionTap(
+  void _onDropDownOptionTap(
       ValueItem<T> option, bool isSelected, StateSetter dropdownState, selectedOptions) {
     if (widget.selectionType == SelectionType.multi) {
       if (isSelected) {
@@ -992,6 +996,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         _selectedOptions.add(option);
       });
       _focusNode.unfocus();
+      _searchFocusNode?.unfocus();
     }
 
     if (_controller != null) {
@@ -1032,7 +1037,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       enabled:
           !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
       onTap: () {
-        onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
+        _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
       },
       trailing: widget.showSelectedIconOnTrailing
           ? _getSelectedIcon(
