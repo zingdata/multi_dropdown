@@ -352,7 +352,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   final LayerLink _layerLink = LayerLink();
 
   /// Response from the network call.
-  dynamic _reponseBody;
+  dynamic _responseBody;
 
   /// value notifier that is used for controller.
   MultiSelectController<T>? _controller;
@@ -426,11 +426,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   _handleFocusChange() {
     Future.delayed(const Duration(milliseconds: 100)).then((value) {
       if (_focusNode.hasFocus && mounted) {
-        _overlayEntry = _reponseBody != null && widget.networkConfig != null
+        _overlayEntry = _responseBody != null && widget.networkConfig != null
             ? _buildNetworkErrorOverlayEntry()
             : _buildOverlayEntry();
         Overlay.of(context).insert(_overlayEntry!);
-        if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
+        _searchFocusNode?.requestFocus();
         return;
       }
 
@@ -1064,10 +1064,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (result.statusCode == 200) {
       final data = json.decode(result.body);
       final List<ValueItem<T>> parsedOptions = await widget.responseParser!(data);
-      _reponseBody = null;
+      _responseBody = null;
       _options.addAll(parsedOptions);
     } else {
-      _reponseBody = result.body;
+      _responseBody = result.body;
     }
   }
 
@@ -1142,10 +1142,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             widget.responseErrorBuilder != null
-                                ? widget.responseErrorBuilder!(context, _reponseBody)
+                                ? widget.responseErrorBuilder!(context, _responseBody)
                                 : Padding(
                                     padding: const EdgeInsets.all(16.0),
-                                    child: Text('Error fetching data: $_reponseBody'),
+                                    child: Text('Error fetching data: $_responseBody'),
                                   ),
                           ],
                         ))))
