@@ -430,6 +430,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ? _buildNetworkErrorOverlayEntry()
             : _buildOverlayEntry();
         Overlay.of(context).insert(_overlayEntry!);
+        if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
         _searchFocusNode?.requestFocus();
         return;
       }
