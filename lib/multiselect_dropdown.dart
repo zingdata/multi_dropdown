@@ -806,6 +806,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                             controller: searchController,
                             focusNode: _searchFocusNode,
                             keyboardType: widget.searchKeyboardType,
+                            textInputAction: TextInputAction.done,
                             decoration: widget.searchInputDecoration ??
                                 InputDecoration(
                                   fillColor: Colors.grey.shade200,
