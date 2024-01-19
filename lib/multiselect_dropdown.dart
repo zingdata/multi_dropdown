@@ -999,8 +999,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         _selectedOptions.clear();
         _selectedOptions.add(option);
       });
-      _focusNode.unfocus();
-      _searchFocusNode?.unfocus();
+      _onOutSideTap();
     }
 
     if (_controller != null) {
