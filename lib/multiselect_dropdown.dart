@@ -433,16 +433,13 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         if (widget.onShowOverlay != null) widget.onShowOverlay!(_overlayEntry!);
         _searchFocusNode?.requestFocus();
         return;
-      } else {
-        _overlayEntry?.remove();
-        if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
       }
 
-    //   if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
-    //       _overlayEntry != null) {
-    //     _overlayEntry?.remove();
-    //     if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
-    //   }
+      //   if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
+      //       _overlayEntry != null) {
+      //     _overlayEntry?.remove();
+      //     if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+      //   }
 
       if (mounted) {
         setState(() {
@@ -684,6 +681,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _searchFocusNode!.unfocus();
     }
     _focusNode.unfocus();
+    _overlayEntry?.remove();
+    if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
   }
 
   /// Buid the selected item chip.
