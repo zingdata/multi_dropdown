@@ -435,11 +435,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         return;
       }
 
-      if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
-          _overlayEntry != null) {
-        _overlayEntry?.remove();
-        if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
-      }
+    //   if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
+    //       _overlayEntry != null) {
+    //     _overlayEntry?.remove();
+    //     if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+    //   }
 
       if (mounted) {
         setState(() {
