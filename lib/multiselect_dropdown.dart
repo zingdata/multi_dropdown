@@ -1026,7 +1026,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ),
       ),
       textColor: Colors.black,
-      focusColor: Colors.red,
       selectedColor: widget.selectedOptionTextColor ?? primaryColor,
       selected: isSelected,
       autofocus: true,
