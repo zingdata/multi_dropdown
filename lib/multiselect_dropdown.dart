@@ -804,60 +804,62 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                         Container(
                           height: widget.searchBoxHeight,
                           padding: widget.searchBoxPadding ?? const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: searchController,
-                            focusNode: _searchFocusNode,
-                            keyboardType: widget.searchKeyboardType,
-                            textInputAction: TextInputAction.done,
-                            decoration: widget.searchInputDecoration ??
-                                InputDecoration(
-                                  fillColor: Colors.grey.shade200,
-                                  isDense: true,
-                                  hintText: 'Search',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                      width: 0.8,
+                          child: Center(
+                            child: TextFormField(
+                              controller: searchController,
+                              focusNode: _searchFocusNode,
+                              keyboardType: widget.searchKeyboardType,
+                              textInputAction: TextInputAction.done,
+                              decoration: widget.searchInputDecoration ??
+                                  InputDecoration(
+                                    fillColor: Colors.grey.shade200,
+                                    isDense: true,
+                                    hintText: 'Search',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                        width: 0.8,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 0.8,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () {
+                                        searchController.clear();
+                                        dropdownState(() {
+                                          options = _options;
+                                        });
+                                      },
                                     ),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 0.8,
-                                    ),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      searchController.clear();
-                                      dropdownState(() {
-                                        options = _options;
-                                      });
-                                    },
-                                  ),
-                                ),
-                            onChanged: (value) {
-                              debugPrint('search value changed: $value');
-                              dropdownState(() {
-                                options = _options
-                                    .where((element) =>
-                                        element.label.toLowerCase().contains(value.toLowerCase()))
-                                    .toList();
-                                if (widget.onSearch != null) widget.onSearch!(value, options);
-                              });
-                            },
-                            onFieldSubmitted: widget.allowCustomValues
-                                ? (value) {
-                                    _onDropDownOptionTap(
-                                      ValueItem<T>(label: value, value: value as T),
-                                      false,
-                                      dropdownState,
-                                      selectedOptions,
-                                    );
-                                  }
-                                : null,
+                              onChanged: (value) {
+                                debugPrint('search value changed: $value');
+                                dropdownState(() {
+                                  options = _options
+                                      .where((element) =>
+                                          element.label.toLowerCase().contains(value.toLowerCase()))
+                                      .toList();
+                                  if (widget.onSearch != null) widget.onSearch!(value, options);
+                                });
+                              },
+                              onFieldSubmitted: widget.allowCustomValues
+                                  ? (value) {
+                                      _onDropDownOptionTap(
+                                        ValueItem<T>(label: value, value: value as T),
+                                        false,
+                                        dropdownState,
+                                        selectedOptions,
+                                      );
+                                    }
+                                  : null,
+                            ),
                           ),
                         ),
                         const Divider(height: 1),
