@@ -35,6 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.9
   multi_dropdown:
     path: ../
 
@@ -59,6 +60,16 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+      - assets/images/
+      - assets/icons/
+      - assets/icons-new-import/
+      - assets/icons-new-svg/
+      - assets/svg/
+      - assets/png/
+      - assets/lottie/
+      - assets/fonts/
+      - assets/icons-svg/   
 
   # To add assets to your application, add an assets section, like this:
   # assets:

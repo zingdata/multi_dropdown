@@ -1,3 +1,4 @@
+import 'package:example/multi_select_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -82,21 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     debugPrint(options.toString());
                   },
                   options: <ValueItem<User>>[
-                    ValueItem(
-                        label: 'Option 1', value: User(name: 'User 1', id: 1)),
-                    ValueItem(
-                        label: 'Option 2', value: User(name: 'User 2', id: 2)),
-                    ValueItem(
-                        label: 'Option 3', value: User(name: 'User 3', id: 3)),
-                    ValueItem(
-                        label: 'Option 4', value: User(name: 'User 4', id: 4)),
-                    ValueItem(
-                        label: 'Option 5', value: User(name: 'User 5', id: 5)),
+                    ValueItem(label: 'Option 1', value: User(name: 'User 1', id: 1)),
+                    ValueItem(label: 'Option 2', value: User(name: 'User 2', id: 2)),
+                    ValueItem(label: 'Option 3', value: User(name: 'User 3', id: 3)),
+                    ValueItem(label: 'Option 4', value: User(name: 'User 4', id: 4)),
+                    ValueItem(label: 'Option 5', value: User(name: 'User 5', id: 5)),
                   ],
                   maxItems: 4,
                   selectionType: SelectionType.multi,
-                  chipConfig: const ChipConfig(
-                      wrapType: WrapType.wrap, backgroundColor: Colors.red),
+                  chipConfig:
+                      const ChipConfig(wrapType: WrapType.wrap, backgroundColor: Colors.red),
                   dropdownHeight: 300,
                   optionTextStyle: const TextStyle(fontSize: 16),
                   selectedOptionIcon: const Icon(
@@ -222,7 +218,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }),
                 ),
-                const SizedBox(height: 50)
+                const SizedBox(height: 50),
+                MultiSelectDropDownWidget<String>(
+                  showDropDownOnStart: true,
+                  selectionType: SelectionType.single,
+                  gettingOptions: false,
+                  searchKeyboardType: TextInputType.text,
+                  options: [
+                    ValueItem(label: 'Test1', value: 'Test1'),
+                    ValueItem(label: 'Test2', value: 'Test2'),
+                  ],
+                  selectedOptions: [],
+                  onShowOverlay: (overlayEntry) {},
+                  reachedMaxOptionsScroll: () {},
+                  onOptionSelected: (List<ValueItem<String>> selectedOptions) {},
+                  onSearch: (value, List<ValueItem<String>> options) {},
+                  allowCustomValues: true,
+                ),
               ],
             ),
           ),
