@@ -18,7 +18,7 @@ class SingleSelectedItem extends StatelessWidget {
     return Row(
       children: [
         if (icon != null) ...[
-          const SizedBox(width: 4),
+          const SizedBox(width: 10),
           icon!,
         ],
         Padding(
