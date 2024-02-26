@@ -765,6 +765,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (optionIcon != null) {
       return optionIcon;
     }
+    if (!forDropDown) {
+      return null;
+    }
     if (isSelected) {
       return widget.selectedOptionIcon ??
           Icon(
