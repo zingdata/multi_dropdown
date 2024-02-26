@@ -530,7 +530,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   Widget build(BuildContext context) {
     final row = SizedBox(
-     height: 28,   
+      height: 28,
       child: Row(
         children: [
           Expanded(
@@ -608,7 +608,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
 
     if (widget.selectionType == SelectionType.single && !widget.showChipInSingleSelectMode) {
-      return SingleSelectedItem(label: _selectedOptions.first.label);
+      return SingleSelectedItem(
+        label: _selectedOptions.first.label,
+        textStyle: widget.chipConfig.labelStyle,
+      );
     }
 
     return _buildSelectedItems();
