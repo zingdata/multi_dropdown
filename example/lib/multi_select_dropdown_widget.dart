@@ -2,10 +2,15 @@ import 'package:example/context_extension.dart';
 import 'package:example/zing_icons_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+
 class MultiSelectDropDownWidget<T> extends StatelessWidget {
   const MultiSelectDropDownWidget({
     super.key,
+    this.minHeight,
     this.controller,
+    this.decoration,
+    this.title,
+    this.titleStyle,
     this.hintText,
     this.options,
     this.selectedOptions,
@@ -23,8 +28,12 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.gettingOptions = false,
     this.showDropDownOnStart = false,
     this.allowCustomValues = false,
+    this.suffixIcon,
   });
-
+  final double? minHeight;
+  final BoxDecoration? decoration;
+  final String? title;
+  final TextStyle? titleStyle;
   final List<ValueItem<T>>? options;
   final List<ValueItem<T>>? selectedOptions;
   final String? hintText;
@@ -44,17 +53,13 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final bool gettingOptions;
   final bool showDropDownOnStart;
   final bool allowCustomValues;
+  final Icon? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     final outlineBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(6),
       borderSide: BorderSide(color: context.colorTheme.outline, width: 1),
-    );
-    final suffixIcon = Icon(
-      Icons.keyboard_arrow_down_rounded,
-      size: 24,
-      color: context.colorTheme.secondary,
     );
     final chipConfig = ChipConfig(
       wrapType: WrapType.scroll,
@@ -117,6 +122,9 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 2),
                 child: MultiSelectDropDown<T>(
                   controller: controller,
+                  title: title,
+                  titleStyle: titleStyle,
+                  inputDecoration: decoration,
                   gettingOptions: gettingOptions,
                   borderColor: Colors.transparent,
                   borderRadius: 6,
@@ -127,7 +135,12 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                   options: options ?? [],
                   selectionType: selectionType,
                   searchEnabled: searchEnabled,
-                  suffixIcon: suffixIcon,
+                  suffixIcon: suffixIcon ??
+                      Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 24,
+                        color: context.colorTheme.secondary,
+                      ),
                   chipConfig: chipConfig,
                   dropdownHeight: 300,
                   showChipInSingleSelectMode: true,
@@ -159,6 +172,9 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
               )
             : MultiSelectDropDown<T>.network(
                 borderColor: Colors.transparent,
+                inputDecoration: decoration,
+                title: title,
+                titleStyle: titleStyle,
                 gettingOptions: gettingOptions,
                 borderRadius: 6,
                 padding: EdgeInsets.zero,
@@ -169,7 +185,12 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 responseParser: responseParser,
                 selectionType: selectionType,
                 searchEnabled: searchEnabled,
-                suffixIcon: suffixIcon,
+                suffixIcon: suffixIcon ??
+                    Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 24,
+                      color: context.colorTheme.secondary,
+                    ),
                 chipConfig: chipConfig,
                 dropdownHeight: 300,
                 showChipInSingleSelectMode: true,

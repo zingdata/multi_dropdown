@@ -26,6 +26,10 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   // selection type of the dropdown
   final SelectionType selectionType;
 
+  final String? title;
+  final TextStyle? titleStyle;
+  final double minHeight;
+
   // Hint
   final String hint;
   final Color? hintColor;
@@ -208,6 +212,9 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     Key? key,
     required this.onOptionSelected,
     required this.options,
+    this.minHeight = 52,
+    this.title,
+    this.titleStyle,
     this.selectedOptionTextColor,
     this.optionSeperator,
     this.chipConfig = const ChipConfig(),
@@ -273,6 +280,9 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     Key? key,
     required this.networkConfig,
     required this.responseParser,
+    this.minHeight = 52,
+    this.title,
+    this.titleStyle,
     this.responseErrorBuilder,
     required this.onOptionSelected,
     this.selectedOptionTextColor,
@@ -519,6 +529,33 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final row = SizedBox(
+     height: 28,   
+      child: Row(
+        children: [
+          Expanded(
+            child: _getContainerContent(),
+          ),
+          if (widget.showClearIcon && _anyItemSelected) ...[
+            const SizedBox(width: 4),
+            InkWell(
+              onTap: () => clear(),
+              child: const Icon(
+                Icons.close_outlined,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 4)
+          ],
+          if (!_selectionMode)
+            AnimatedRotation(
+              turns: _selectionMode ? 0.5 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: widget.suffixIcon,
+            ),
+        ],
+      ),
+    );
     return CompositedTransformTarget(
       link: _layerLink,
       child: Focus(
@@ -532,37 +569,28 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             _toggleFocus();
           },
           child: Container(
-            height: widget.chipConfig.wrapType == WrapType.wrap ? null : 52,
+            height: widget.chipConfig.wrapType == WrapType.wrap ? null : 90,
             constraints: BoxConstraints(
               minWidth: MediaQuery.of(context).size.width,
-              minHeight: 52,
+              minHeight: 90,
             ),
             padding: _getContainerPadding(),
             decoration: _getContainerDecoration(),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _getContainerContent(),
-                ),
-                if (widget.showClearIcon && _anyItemSelected) ...[
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () => clear(),
-                    child: const Icon(
-                      Icons.close_outlined,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 4)
-                ],
-                if (!_selectionMode)
-                  AnimatedRotation(
-                    turns: _selectionMode ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: widget.suffixIcon,
-                  ),
-              ],
-            ),
+            child: widget.title != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        child: Text(
+                          widget.title!,
+                          style: widget.titleStyle,
+                        ),
+                      ),
+                      row,
+                    ],
+                  )
+                : row,
           ),
         ),
       ),
