@@ -756,14 +756,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   Widget? _getSelectedIcon(
     bool isSelected,
     Color primaryColor,
-    String? optionIcon,
+    Widget? optionIcon,
     bool forDropDown,
   ) {
     if (!widget.alwaysShowOptionIcon && forDropDown) {
       return null;
     }
     if (optionIcon != null) {
-      return Image.asset(optionIcon, width: 24, height: 24);
+      return optionIcon;
     }
     if (isSelected) {
       return widget.selectedOptionIcon ??

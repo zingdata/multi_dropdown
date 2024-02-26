@@ -227,12 +227,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     selectionType: SelectionType.single,
                     gettingOptions: false,
                     searchKeyboardType: TextInputType.text,
-                    options: [
+                    options: const [
                       ValueItem(label: 'Test1', value: 'Test1'),
                       ValueItem(label: 'Test2', value: 'Test2'),
                     ],
                     selectedOptions: [
-                      ValueItem(label: 'Test1', value: 'Test1', icon: ZingIconsWidget.add)
+                      ValueItem(
+                        label: 'Test1',
+                        value: 'Test1',
+                        icon: Image.asset(ZingIconsWidget.add,
+                            height: 18, width: 18, color: context.colorTheme.onSurface),
+                      ),
                     ],
                     onShowOverlay: (overlayEntry) {},
                     reachedMaxOptionsScroll: () {},

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 /// [label] is the item that is displayed in the list. [value] is the value that is returned when the item is selected.
 /// If the [value] is not provided, the [label] is used as the value.
 /// An example of a [ValueItem] is:
@@ -10,7 +12,7 @@ import 'dart:convert';
 class ValueItem<T> {
   /// The label of the value item
   final String label;
-  final String? icon;
+  final Widget? icon;
 
   /// The value of the value item
   final T? value;
