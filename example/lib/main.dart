@@ -1,6 +1,7 @@
 import 'package:example/context_extension.dart';
 import 'package:example/multi_select_dropdown_widget.dart';
 import 'package:example/theme.dart';
+import 'package:example/zing_icons_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -230,17 +231,24 @@ class _MyHomePageState extends State<MyHomePage> {
                       ValueItem(label: 'Test1', value: 'Test1'),
                       ValueItem(label: 'Test2', value: 'Test2'),
                     ],
-                    selectedOptions: [],
+                    selectedOptions: [
+                      ValueItem(label: 'Test1', value: 'Test1', icon: ZingIconsWidget.add)
+                    ],
                     onShowOverlay: (overlayEntry) {},
                     reachedMaxOptionsScroll: () {},
-                    suffixIcon:  Icon(
+                    suffixIcon: Icon(
                       Icons.arrow_drop_down_rounded,
                       size: 24,
                       color: context.colorTheme.secondary,
                     ),
                     onOptionSelected: (List<ValueItem<String>> selectedOptions) {},
                     onSearch: (value, List<ValueItem<String>> options) {},
-                    allowCustomValues: true,
+                    allowCustomValues: false,
+                    alwaysShowOptionIcon: false,
+                    searchEnabled: false,
+                    canDeleteChip: false,
+                    showChipInSingleSelectMode: false,
+                    chipLabelStyle: context.textTheme.bodyLarge,
                   ),
                 ),
               ],

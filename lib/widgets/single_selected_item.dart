@@ -7,22 +7,32 @@ class SingleSelectedItem extends StatelessWidget {
     Key? key,
     required this.label,
     this.textStyle,
+    this.icon,
   }) : super(key: key);
 
   final String label;
+  final Widget? icon;
   final TextStyle? textStyle;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Text(
-        label,
-        style: textStyle ??
-            TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade700,
-            ),
-      ),
+    return Row(
+      children: [
+        if (icon != null) ...[
+          const SizedBox(width: 4),
+          icon!,
+        ],
+        Padding(
+          padding: EdgeInsets.only(left: icon == null ? 10.0 : 4, right: 10.0),
+          child: Text(
+            label,
+            style: textStyle ??
+                TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                ),
+          ),
+        ),
+      ],
     );
   }
 }

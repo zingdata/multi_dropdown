@@ -611,6 +611,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       return SingleSelectedItem(
         label: _selectedOptions.first.label,
         textStyle: widget.chipConfig.labelStyle,
+        icon: _getSelectedIcon(
+          false,
+          Theme.of(context).primaryColor,
+          _selectedOptions.first.icon,
+          false,
+        ),
       );
     }
 
@@ -747,8 +753,13 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Get the selectedItem icon for the dropdown
-  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, String? optionIcon) {
-    if (!widget.alwaysShowOptionIcon) {
+  Widget? _getSelectedIcon(
+    bool isSelected,
+    Color primaryColor,
+    String? optionIcon,
+    bool forDropDown,
+  ) {
+    if (!widget.alwaysShowOptionIcon && forDropDown) {
       return null;
     }
     if (optionIcon != null) {
@@ -1079,6 +1090,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               isSelected,
               primaryColor,
               option.icon,
+              true,
             )
           : null,
       leading: !widget.showSelectedIconOnTrailing
@@ -1086,6 +1098,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               isSelected,
               primaryColor,
               option.icon,
+              true,
             )
           : null,
     );

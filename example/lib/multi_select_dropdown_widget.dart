@@ -28,7 +28,9 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.gettingOptions = false,
     this.showDropDownOnStart = false,
     this.allowCustomValues = false,
+    this.showChipInSingleSelectMode = true,
     this.suffixIcon,
+    this.chipLabelStyle,
   });
   final double? minHeight;
   final BoxDecoration? decoration;
@@ -54,6 +56,8 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final bool showDropDownOnStart;
   final bool allowCustomValues;
   final Icon? suffixIcon;
+  final bool showChipInSingleSelectMode;
+  final TextStyle? chipLabelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     final chipConfig = ChipConfig(
       wrapType: WrapType.scroll,
       backgroundColor: context.colorTheme.primaryContainer,
-      labelStyle: context.textTheme.bodyMedium,
+      labelStyle: chipLabelStyle ?? context.textTheme.bodyMedium,
       labelPadding: !canDeleteChip ? const EdgeInsets.symmetric(horizontal: 12) : EdgeInsets.zero,
       padding: !canDeleteChip
           ? EdgeInsets.zero
@@ -143,7 +147,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                       ),
                   chipConfig: chipConfig,
                   dropdownHeight: 300,
-                  showChipInSingleSelectMode: true,
+                  showChipInSingleSelectMode: showChipInSingleSelectMode,
                   showClearIcon: false,
                   optionTextStyle: context.textTheme.bodyLarge,
                   selectedOptionIcon: selectedOptionIcon,
@@ -193,7 +197,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                     ),
                 chipConfig: chipConfig,
                 dropdownHeight: 300,
-                showChipInSingleSelectMode: true,
+                showChipInSingleSelectMode: showChipInSingleSelectMode,
                 showClearIcon: false,
                 optionTextStyle: context.textTheme.bodyLarge,
                 selectedOptionIcon: selectedOptionIcon,
