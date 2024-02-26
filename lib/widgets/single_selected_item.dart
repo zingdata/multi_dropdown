@@ -21,15 +21,19 @@ class SingleSelectedItem extends StatelessWidget {
           const SizedBox(width: 10),
           icon!,
         ],
-        Padding(
-          padding: EdgeInsets.only(left: icon == null ? 10.0 : 4, right: 10.0),
-          child: Text(
-            label,
-            style: textStyle ??
-                TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: icon == null ? 10.0 : 4, right: 10.0),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: textStyle ??
+                  TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade700,
+                  ),
+            ),
           ),
         ),
       ],
