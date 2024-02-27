@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 /// It is used to build the selected item.
 class SingleSelectedItem extends StatelessWidget {
   final String label;
+  final TextStyle? labelStyle;
   const SingleSelectedItem({
     Key? key,
     required this.label,
+    this.labelStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Text(
         label,
-        style: TextStyle(
+        style: labelStyle ?? TextStyle(
           fontSize: 13,
           color: Colors.grey.shade700,
         ),

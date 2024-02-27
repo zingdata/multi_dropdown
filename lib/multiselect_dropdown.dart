@@ -583,7 +583,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
 
     if (widget.selectionType == SelectionType.single && !widget.showChipInSingleSelectMode) {
-      return SingleSelectedItem(label: _selectedOptions.first.label);
+      return SingleSelectedItem(
+        label: _selectedOptions.first.label,
+        labelStyle: widget.chipConfig.labelStyle,
+      );
     }
 
     return _buildSelectedItems();
