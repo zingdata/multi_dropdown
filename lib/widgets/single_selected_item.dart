@@ -17,6 +17,8 @@ class SingleSelectedItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.fade,
         style: labelStyle ?? TextStyle(
           fontSize: 13,
           color: Colors.grey.shade700,
