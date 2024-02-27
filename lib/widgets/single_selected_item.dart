@@ -18,7 +18,7 @@ class SingleSelectedItem extends StatelessWidget {
       child: Text(
         label,
         maxLines: 1,
-        overflow: TextOverflow.fade,
+        overflow: TextOverflow.ellipsis,
         style: labelStyle ?? TextStyle(
           fontSize: 13,
           color: Colors.grey.shade700,
