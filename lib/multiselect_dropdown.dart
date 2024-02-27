@@ -56,6 +56,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final TextStyle? optionTextStyle;
   final Widget? optionSeperator;
   final double dropdownHeight;
+  final double? dropDownBoxWidth;
   final Decoration? dropDownBoxDecoration;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
@@ -259,6 +260,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
     this.allowCustomValues = false,
+    this.dropDownBoxWidth,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -326,6 +328,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
     this.allowCustomValues = false,
+    this.dropDownBoxWidth,
   })  : options = const [],
         super(key: key);
 
@@ -1140,7 +1143,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 child: Material(
                     elevation: 4,
                     child: Container(
-                        width: size.width,
+                        width: widget.dropDownBoxWidth ?? size.width,
                         constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
