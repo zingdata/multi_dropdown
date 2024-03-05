@@ -5,24 +5,35 @@ import 'package:flutter/material.dart';
 class SingleSelectedItem extends StatelessWidget {
   final String label;
   final TextStyle? labelStyle;
+  final Widget? icon;
   const SingleSelectedItem({
     Key? key,
     required this.label,
     this.labelStyle,
+    this.icon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: labelStyle ?? TextStyle(
-          fontSize: 13,
-          color: Colors.grey.shade700,
-        ),
+      child: Row(
+        children: [
+          if (icon != null) ...[
+            const SizedBox(width: 4),
+            icon!,
+          ],
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: labelStyle ??
+                TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                ),
+          ),
+        ],
       ),
     );
   }
