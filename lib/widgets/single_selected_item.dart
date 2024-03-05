@@ -6,11 +6,13 @@ class SingleSelectedItem extends StatelessWidget {
   final String label;
   final TextStyle? labelStyle;
   final Widget? icon;
+  final bool showOnlyIcon;
   const SingleSelectedItem({
     Key? key,
     required this.label,
     this.labelStyle,
     this.icon,
+    this.showOnlyIcon = false,
   }) : super(key: key);
 
   @override
@@ -20,16 +22,17 @@ class SingleSelectedItem extends StatelessWidget {
       child: Row(
         children: [
           if (icon != null) icon!,
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: labelStyle ??
-                TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-          ),
+          if (!showOnlyIcon)
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: labelStyle ??
+                  TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade700,
+                  ),
+            ),
         ],
       ),
     );

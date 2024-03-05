@@ -13,6 +13,7 @@ class ValueItem<T> {
   /// The label of the value item
   final String label;
   final Widget? icon;
+  final bool showOnlyIcon;
 
   /// The value of the value item
   final T? value;
@@ -22,6 +23,7 @@ class ValueItem<T> {
     required this.label,
     required this.value,
     this.icon,
+    this.showOnlyIcon = false,
   });
 
   /// toString method for [ValueItem]
@@ -36,6 +38,7 @@ class ValueItem<T> {
       'label': label,
       'value': value,
       'icon': icon,
+      'showOnlyIcon': showOnlyIcon,
     };
   }
 
@@ -45,6 +48,7 @@ class ValueItem<T> {
       label: map['label'] ?? '',
       value: map['value'],
       icon: map['icon'],
+      showOnlyIcon: map['showOnlyIcon'],
     );
   }
 

@@ -605,6 +605,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         label: _selectedOptions.first.label,
         labelStyle: widget.chipConfig.labelStyle,
         icon: _selectedOptions.first.icon,
+        showOnlyIcon: _selectedOptions.first.showOnlyIcon,
       );
     }
 
@@ -940,7 +941,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           itemBuilder: (context, index) {
                                             final option = options[index];
                                             final isSelected = selectedOptions.firstWhereOrNull(
-                                                    (element) => element.label == option.label) !=
+                                                  (element) => element.label == option.label,
+                                                ) !=
                                                 null;
                                             final primaryColor = Theme.of(context).primaryColor;
                                             return Padding(
@@ -1047,13 +1049,15 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     return SizedBox(
       height: widget.optionItemHeight,
       child: ListTile(
-        title: Text(
-          option.label,
-          style: widget.optionTextStyle ??
-              TextStyle(
-                fontSize: widget.hintFontSize,
+        title: option.showOnlyIcon
+            ? null
+            : Text(
+                option.label,
+                style: widget.optionTextStyle ??
+                    TextStyle(
+                      fontSize: widget.hintFontSize,
+                    ),
               ),
-        ),
         horizontalTitleGap: widget.optionHorizontalTitleGap,
         selectedColor: widget.selectedOptionTextColor ?? primaryColor,
         selected: isSelected,
