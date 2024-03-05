@@ -60,6 +60,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final Decoration? dropDownBoxDecoration;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
+  final double? optionItemHeight;
 
   // dropdownfield configuration
   final Color? backgroundColor;
@@ -232,6 +233,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
     this.dropdownHeight = 200,
+    this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
@@ -301,6 +303,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
     this.dropdownHeight = 200,
+    this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
@@ -1026,51 +1029,53 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     widget.onOptionSelected?.call(_selectedOptions);
   }
 
-  ListTile _buildOption(
+  Widget _buildOption(
     ValueItem<T> option,
     Color primaryColor,
     bool isSelected,
     StateSetter dropdownState,
     List<ValueItem<T>> selectedOptions,
   ) {
-    return ListTile(
-      title: Text(
-        option.label,
-        style: widget.optionTextStyle ??
-            TextStyle(
-              fontSize: widget.hintFontSize,
-            ),
+    return SizedBox(
+      height: widget.optionItemHeight,  
+      child: ListTile(
+        title: Text(
+          option.label,
+          style: widget.optionTextStyle ??
+              TextStyle(
+                fontSize: widget.hintFontSize,
+              ),
+        ),
+        selectedColor: widget.selectedOptionTextColor ?? primaryColor,
+        selected: isSelected,
+        autofocus: true,
+        contentPadding: widget.optionsContentPadding,
+        dense: true,
+        tileColor: widget.optionsBackgroundColor ?? Colors.white,
+        selectedTileColor: widget.alwaysShowOptionIcon && widget.options.firstOrNull?.icon == null
+            ? Colors.transparent
+            : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
+        shape: widget.selectedOptionShapeBorder,
+        enabled:
+            !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
+        onTap: () {
+          _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
+        },
+        trailing: widget.showSelectedIconOnTrailing
+            ? _getSelectedIcon(
+                isSelected,
+                primaryColor,
+                option.icon,
+              )
+            : null,
+        leading: !widget.showSelectedIconOnTrailing
+            ? _getSelectedIcon(
+                isSelected,
+                primaryColor,
+                option.icon,
+              )
+            : null,
       ),
-      textColor: Colors.black,
-      selectedColor: widget.selectedOptionTextColor ?? primaryColor,
-      selected: isSelected,
-      autofocus: true,
-      contentPadding: widget.optionsContentPadding,
-      dense: true,
-      tileColor: widget.optionsBackgroundColor ?? Colors.white,
-      selectedTileColor: widget.alwaysShowOptionIcon && widget.options.firstOrNull?.icon == null
-          ? Colors.transparent
-          : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
-      shape: widget.selectedOptionShapeBorder,
-      enabled:
-          !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
-      onTap: () {
-        _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
-      },
-      trailing: widget.showSelectedIconOnTrailing
-          ? _getSelectedIcon(
-              isSelected,
-              primaryColor,
-              option.icon,
-            )
-          : null,
-      leading: !widget.showSelectedIconOnTrailing
-          ? _getSelectedIcon(
-              isSelected,
-              primaryColor,
-              option.icon,
-            )
-          : null,
     );
   }
 
