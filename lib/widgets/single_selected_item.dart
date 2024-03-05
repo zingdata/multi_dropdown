@@ -19,19 +19,18 @@ class SingleSelectedItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: [
-          if (icon != null) ...[
-            const SizedBox(width: 4),
-            icon!,
-          ],
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: labelStyle ??
-                TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
+          if (icon != null) icon!,
+          Expanded(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: labelStyle ??
+                  TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade700,
+                  ),
+            ),
           ),
         ],
       ),
