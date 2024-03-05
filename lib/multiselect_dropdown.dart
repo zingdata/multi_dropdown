@@ -46,6 +46,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final ShapeBorder? selectedOptionShapeBorder;
   final Widget Function(BuildContext, ValueItem<T>)? selectedItemBuilder;
   final bool showSelectedIconOnTrailing;
+  final MainAxisAlignment selectedOptionRowAlignment;
 
   // chip configuration
   final bool showChipInSingleSelectMode;
@@ -270,6 +271,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
     this.optionHorizontalTitleGap,
+    this.selectedOptionRowAlignment = MainAxisAlignment.start,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -341,6 +343,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
     this.optionHorizontalTitleGap,
+    this.selectedOptionRowAlignment = MainAxisAlignment.start,
   })  : options = const [],
         super(key: key);
 
@@ -555,6 +558,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             padding: _getContainerPadding(),
             decoration: _getContainerDecoration(),
             child: Row(
+              mainAxisAlignment: widget.selectedOptionRowAlignment,
               children: [
                 widget.expandedSelectedOptions
                     ? Expanded(child: _getContainerContent())
@@ -1040,7 +1044,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     List<ValueItem<T>> selectedOptions,
   ) {
     return SizedBox(
-      height: widget.optionItemHeight,  
+      height: widget.optionItemHeight,
       child: ListTile(
         title: Text(
           option.label,
@@ -1060,8 +1064,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ? Colors.transparent
             : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
         shape: widget.selectedOptionShapeBorder,
-        enabled:
-            !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
+        enabled: !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
+            null),
         onTap: () {
           _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
         },
