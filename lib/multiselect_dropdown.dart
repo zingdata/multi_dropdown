@@ -733,12 +733,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Get the selectedItem icon for the dropdown
-  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, String? optionIcon) {
+  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, Widget? optionIcon) {
     if (!widget.alwaysShowOptionIcon) {
       return null;
     }
     if (optionIcon != null) {
-      return Image.asset(optionIcon, width: 24, height: 24);
+      return optionIcon;
     }
     if (isSelected) {
       return widget.selectedOptionIcon ??
