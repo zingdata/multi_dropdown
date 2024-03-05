@@ -206,7 +206,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   ///    chipConfig: const ChipConfig(wrapType: WrapType.scroll),
   ///    );
   /// ```
-   
+
   /// [expandedSelectedOptions] is for spacing between dropdown icon and option
 
   const MultiSelectDropDown({
@@ -334,7 +334,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsContentPadding,
     this.allowCustomValues = false,
     this.dropDownWidth,
-     this.expandedSelectedOptions = true,
+    this.expandedSelectedOptions = true,
   })  : options = const [],
         super(key: key);
 
@@ -550,7 +550,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             decoration: _getContainerDecoration(),
             child: Row(
               children: [
-                _getContainerContent(),
+                widget.expandedSelectedOptions
+                    ? Expanded(child: _getContainerContent())
+                    : _getContainerContent(),
                 if (widget.showClearIcon && _anyItemSelected) ...[
                   const SizedBox(width: 4),
                   InkWell(
@@ -562,12 +564,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                   ),
                   const SizedBox(width: 4)
                 ],
-                if (!_selectionMode)
+                if (!_selectionMode) ...[
+                  const SizedBox(width: 4),
                   AnimatedRotation(
                     turns: _selectionMode ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
                     child: widget.suffixIcon,
                   ),
+                ],
               ],
             ),
           ),
