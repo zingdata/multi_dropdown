@@ -104,6 +104,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final EdgeInsets optionItemPadding;
   final bool allowCustomValues;
 
+  final bool expandedSelectedOptions;
+
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
   ///  **Selection Type**
@@ -204,6 +206,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   ///    chipConfig: const ChipConfig(wrapType: WrapType.scroll),
   ///    );
   /// ```
+   
+  /// [expandedSelectedOptions] is for spacing between dropdown icon and option
 
   const MultiSelectDropDown({
     Key? key,
@@ -261,6 +265,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsContentPadding,
     this.allowCustomValues = false,
     this.dropDownWidth,
+    this.expandedSelectedOptions = true,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -329,6 +334,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsContentPadding,
     this.allowCustomValues = false,
     this.dropDownWidth,
+     this.expandedSelectedOptions = true,
   })  : options = const [],
         super(key: key);
 
@@ -544,9 +550,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             decoration: _getContainerDecoration(),
             child: Row(
               children: [
-                Expanded(
-                  child: _getContainerContent(),
-                ),
+                _getContainerContent(),
                 if (widget.showClearIcon && _anyItemSelected) ...[
                   const SizedBox(width: 4),
                   InkWell(
