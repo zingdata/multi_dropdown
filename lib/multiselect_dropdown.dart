@@ -61,6 +61,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
   final double? optionItemHeight;
+  final double? optionHorizontalTitleGap;
 
   // dropdownfield configuration
   final Color? backgroundColor;
@@ -268,6 +269,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.allowCustomValues = false,
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
+    this.optionHorizontalTitleGap,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -338,6 +340,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.allowCustomValues = false,
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
+    this.optionHorizontalTitleGap,
   })  : options = const [],
         super(key: key);
 
@@ -1046,6 +1049,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 fontSize: widget.hintFontSize,
               ),
         ),
+        horizontalTitleGap: widget.optionHorizontalTitleGap,
         selectedColor: widget.selectedOptionTextColor ?? primaryColor,
         selected: isSelected,
         autofocus: true,
