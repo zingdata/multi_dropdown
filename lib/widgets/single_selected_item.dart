@@ -23,15 +23,17 @@ class SingleSelectedItem extends StatelessWidget {
         children: [
           if (icon != null) icon!,
           if (!showOnlyIcon)
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: labelStyle ??
-                  TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade700,
-                  ),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: labelStyle ??
+                    TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade700,
+                    ),
+              ),
             ),
         ],
       ),
