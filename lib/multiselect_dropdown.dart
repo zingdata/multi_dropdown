@@ -74,7 +74,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final Icon? clearIcon;
   final Decoration? inputDecoration;
   final double? borderRadius;
-  final BorderRadiusGeometry? radiusGeometry;
+  final BorderRadius? radiusGeometry;
   final Color? borderColor;
   final Color? focusedBorderColor;
   final double? borderWidth;
@@ -583,44 +583,32 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         child: InkWell(
           splashColor: null,
           splashFactory: null,
+          borderRadius: widget.radiusGeometry ?? BorderRadius.circular(widget.borderRadius ?? 12.0),
           onTap: () {
             _toggleFocus();
           },
           child: Container(
-            height: widget.chipConfig.wrapType == WrapType.wrap ? null : widget.minHeight,
             constraints: BoxConstraints(
               minWidth: MediaQuery.of(context).size.width,
               minHeight: widget.minHeight,
             ),
             padding: _getContainerPadding(),
             decoration: _getContainerDecoration(),
-            child: Row(
-              mainAxisAlignment: widget.selectedOptionRowAlignment,
-              children: [
-                widget.expandedSelectedOptions
-                    ? Expanded(child: _getContainerContent())
-                    : _getContainerContent(),
-                if (widget.showClearIcon && _anyItemSelected) ...[
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () => clear(),
-                    child: const Icon(
-                      Icons.close_outlined,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 4)
-                ],
-                if (!_selectionMode) ...[
-                  const SizedBox(width: 4),
-                  AnimatedRotation(
-                    turns: _selectionMode ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: widget.suffixIcon,
-                  ),
-                ],
-              ],
-            ),
+            child: widget.title != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                        child: Text(
+                          widget.title!,
+                          style: widget.titleStyle,
+                        ),
+                      ),
+                      row,
+                    ],
+                  )
+                : row,
           ),
         ),
       ),
@@ -780,12 +768,20 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Get the selectedItem icon for the dropdown
-  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, Widget? optionIcon) {
-    if (!widget.alwaysShowOptionIcon) {
+  Widget? _getSelectedIcon(
+    bool isSelected,
+    Color primaryColor,
+    Widget? optionIcon,
+    bool forDropDown,
+  ) {
+    if (!widget.alwaysShowOptionIcon && forDropDown) {
       return null;
     }
     if (optionIcon != null) {
       return optionIcon;
+    }
+    if (!forDropDown) {
+      return null;
     }
     if (isSelected) {
       return widget.selectedOptionIcon ??
@@ -1117,6 +1113,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 isSelected,
                 primaryColor,
                 option.icon,
+                true,
               )
             : null,
         leading: !widget.showSelectedIconOnTrailing
@@ -1124,6 +1121,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 isSelected,
                 primaryColor,
                 option.icon,
+                true,
               )
             : null,
       ),

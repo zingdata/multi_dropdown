@@ -217,6 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     titleStyle: context.textTheme.bodySmall?.copyWith(
                       color: context.colorTheme.secondary,
                     ),
+                    minHeight: 120,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
@@ -235,8 +236,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ValueItem(
                         label: 'Test1',
                         value: 'Test1',
-                        icon: Image.asset(ZingIconsWidget.add,
-                            height: 18, width: 18, color: context.colorTheme.onSurface),
+                        icon: Image.asset(
+                          ZingIconsWidget.add,
+                          height: 18,
+                          width: 18,
+                          color: context.colorTheme.onSurface,
+                        ),
                       ),
                     ],
                     onShowOverlay: (overlayEntry) {},
