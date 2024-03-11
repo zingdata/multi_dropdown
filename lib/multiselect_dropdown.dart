@@ -50,6 +50,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final ShapeBorder? selectedOptionShapeBorder;
   final Widget Function(BuildContext, ValueItem<T>)? selectedItemBuilder;
   final bool showSelectedIconOnTrailing;
+  final MainAxisAlignment selectedOptionRowAlignment;
 
   // chip configuration
   final bool showChipInSingleSelectMode;
@@ -60,9 +61,12 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final TextStyle? optionTextStyle;
   final Widget? optionSeperator;
   final double dropdownHeight;
+  final double? dropDownWidth;
   final Decoration? dropDownBoxDecoration;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
+  final double? optionItemHeight;
+  final double? optionHorizontalTitleGap;
 
   // dropdownfield configuration
   final Color? backgroundColor;
@@ -106,6 +110,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final EdgeInsets? optionsContentPadding;
   final EdgeInsets optionItemPadding;
   final bool allowCustomValues;
+
+  final bool expandedSelectedOptions;
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -208,6 +214,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   ///    );
   /// ```
 
+  /// [expandedSelectedOptions] is for spacing between dropdown icon and option
+
   const MultiSelectDropDown({
     Key? key,
     required this.onOptionSelected,
@@ -234,6 +242,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
     this.dropdownHeight = 200,
+    this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
@@ -266,6 +275,10 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
     this.allowCustomValues = false,
+    this.dropDownWidth,
+    this.expandedSelectedOptions = true,
+    this.optionHorizontalTitleGap,
+    this.selectedOptionRowAlignment = MainAxisAlignment.start,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -304,6 +317,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
     this.dropdownHeight = 200,
+    this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
@@ -336,6 +350,10 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
     this.allowCustomValues = false,
+    this.dropDownWidth,
+    this.expandedSelectedOptions = true,
+    this.optionHorizontalTitleGap,
+    this.selectedOptionRowAlignment = MainAxisAlignment.start,
   })  : options = const [],
         super(key: key);
 
@@ -576,21 +594,33 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ),
             padding: _getContainerPadding(),
             decoration: _getContainerDecoration(),
-            child: widget.title != null
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                        child: Text(
-                          widget.title!,
-                          style: widget.titleStyle,
-                        ),
-                      ),
-                      row,
-                    ],
-                  )
-                : row,
+            child: Row(
+              mainAxisAlignment: widget.selectedOptionRowAlignment,
+              children: [
+                widget.expandedSelectedOptions
+                    ? Expanded(child: _getContainerContent())
+                    : _getContainerContent(),
+                if (widget.showClearIcon && _anyItemSelected) ...[
+                  const SizedBox(width: 4),
+                  InkWell(
+                    onTap: () => clear(),
+                    child: const Icon(
+                      Icons.close_outlined,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 4)
+                ],
+                if (!_selectionMode) ...[
+                  const SizedBox(width: 4),
+                  AnimatedRotation(
+                    turns: _selectionMode ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: widget.suffixIcon,
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
@@ -611,12 +641,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       return SingleSelectedItem(
         label: _selectedOptions.first.label,
         textStyle: widget.chipConfig.labelStyle,
-        icon: _getSelectedIcon(
-          false,
-          Theme.of(context).primaryColor,
-          _selectedOptions.first.icon,
-          false,
-        ),
+        labelStyle: widget.chipConfig.labelStyle,
+        icon: _selectedOptions.first.icon,
+        showOnlyIcon: _selectedOptions.first.showOnlyIcon,
       );
     }
 
@@ -753,20 +780,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Get the selectedItem icon for the dropdown
-  Widget? _getSelectedIcon(
-    bool isSelected,
-    Color primaryColor,
-    Widget? optionIcon,
-    bool forDropDown,
-  ) {
-    if (!widget.alwaysShowOptionIcon && forDropDown) {
+  Widget? _getSelectedIcon(bool isSelected, Color primaryColor, Widget? optionIcon) {
+    if (!widget.alwaysShowOptionIcon) {
       return null;
     }
     if (optionIcon != null) {
       return optionIcon;
-    }
-    if (!forDropDown) {
-      return null;
     }
     if (isSelected) {
       return widget.selectedOptionIcon ??
@@ -838,7 +857,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 color: Colors.transparent,
                 child: Container(
                   constraints: BoxConstraints(
-                    maxWidth: size.width,
+                    maxWidth: widget.dropDownWidth ?? size.width,
                     maxHeight: widget.dropdownHeight,
                   ),
                   decoration: widget.dropDownBoxDecoration,
@@ -960,7 +979,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                           itemBuilder: (context, index) {
                                             final option = options[index];
                                             final isSelected = selectedOptions.firstWhereOrNull(
-                                                    (element) => element.label == option.label) !=
+                                                  (element) => element.label == option.label,
+                                                ) !=
                                                 null;
                                             final primaryColor = Theme.of(context).primaryColor;
                                             return Padding(
@@ -1057,53 +1077,56 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     widget.onOptionSelected?.call(_selectedOptions);
   }
 
-  ListTile _buildOption(
+  Widget _buildOption(
     ValueItem<T> option,
     Color primaryColor,
     bool isSelected,
     StateSetter dropdownState,
     List<ValueItem<T>> selectedOptions,
   ) {
-    return ListTile(
-      title: Text(
-        option.label,
-        style: widget.optionTextStyle ??
-            TextStyle(
-              fontSize: widget.hintFontSize,
-            ),
+    return SizedBox(
+      height: widget.optionItemHeight,
+      child: ListTile(
+        title: option.showOnlyIcon
+            ? null
+            : Text(
+                option.label,
+                style: widget.optionTextStyle ??
+                    TextStyle(
+                      fontSize: widget.hintFontSize,
+                    ),
+              ),
+        horizontalTitleGap: widget.optionHorizontalTitleGap,
+        selectedColor: widget.selectedOptionTextColor ?? primaryColor,
+        selected: isSelected,
+        autofocus: true,
+        contentPadding: widget.optionsContentPadding,
+        dense: true,
+        tileColor: widget.optionsBackgroundColor ?? Colors.white,
+        selectedTileColor: widget.alwaysShowOptionIcon && widget.options.firstOrNull?.icon == null
+            ? Colors.transparent
+            : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
+        shape: widget.selectedOptionShapeBorder,
+        enabled: !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
+            null),
+        onTap: () {
+          _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
+        },
+        trailing: widget.showSelectedIconOnTrailing
+            ? _getSelectedIcon(
+                isSelected,
+                primaryColor,
+                option.icon,
+              )
+            : null,
+        leading: !widget.showSelectedIconOnTrailing
+            ? _getSelectedIcon(
+                isSelected,
+                primaryColor,
+                option.icon,
+              )
+            : null,
       ),
-      textColor: Colors.black,
-      selectedColor: widget.selectedOptionTextColor ?? primaryColor,
-      selected: isSelected,
-      autofocus: true,
-      contentPadding: widget.optionsContentPadding,
-      dense: true,
-      tileColor: widget.optionsBackgroundColor ?? Colors.white,
-      selectedTileColor: widget.alwaysShowOptionIcon && widget.options.firstOrNull?.icon == null
-          ? Colors.transparent
-          : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
-      shape: widget.selectedOptionShapeBorder,
-      enabled:
-          !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) != null),
-      onTap: () {
-        _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
-      },
-      trailing: widget.showSelectedIconOnTrailing
-          ? _getSelectedIcon(
-              isSelected,
-              primaryColor,
-              option.icon,
-              true,
-            )
-          : null,
-      leading: !widget.showSelectedIconOnTrailing
-          ? _getSelectedIcon(
-              isSelected,
-              primaryColor,
-              option.icon,
-              true,
-            )
-          : null,
     );
   }
 

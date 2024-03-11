@@ -6,37 +6,40 @@ class SingleSelectedItem extends StatelessWidget {
   const SingleSelectedItem({
     Key? key,
     required this.label,
-    this.textStyle,
+    required this.labelStyle,
     this.icon,
+    this.showOnlyIcon = false,
+    this.textStyle,
   }) : super(key: key);
 
   final String label;
+  final TextStyle? labelStyle;
+
+  final bool showOnlyIcon;
   final Widget? icon;
   final TextStyle? textStyle;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (icon != null) ...[
-          const SizedBox(width: 10),
-          icon!,
-        ],
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: icon == null ? 10.0 : 4, right: 10.0),
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: textStyle ??
-                  TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade700,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: [
+          if (icon != null) icon!,
+          if (!showOnlyIcon)
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: labelStyle ??
+                    TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade700,
+                    ),
+              ),
             ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
