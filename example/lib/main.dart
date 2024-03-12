@@ -217,14 +217,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     titleStyle: context.textTheme.bodySmall?.copyWith(
                       color: context.colorTheme.secondary,
                     ),
-                    minHeight: 120,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: context.colorTheme.outline,
                       ),
                     ),
-                    showDropDownOnStart: true,
+                   // showDropDownOnStart: true,
                     selectionType: SelectionType.single,
                     gettingOptions: false,
                     searchKeyboardType: TextInputType.text,
@@ -236,11 +235,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ValueItem(
                         label: 'Test1',
                         value: 'Test1',
-                        icon: Image.asset(
-                          ZingIconsWidget.add,
-                          height: 18,
-                          width: 18,
-                          color: context.colorTheme.onSurface,
+                        icon: Padding(
+                          padding: const EdgeInsets.only(right: 4),  
+                          child: Image.asset(
+                            ZingIconsWidget.add,
+                            height: 18,
+                            width: 18,
+                            color: context.colorTheme.onSurface,
+                          ),
                         ),
                       ),
                     ],
@@ -258,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     searchEnabled: false,
                     canDeleteChip: false,
                     showChipInSingleSelectMode: false,
-                    chipLabelStyle: context.textTheme.bodyLarge,
+                    chipTextStyle: context.textTheme.bodyLarge,
                   ),
                 ),
               ],
