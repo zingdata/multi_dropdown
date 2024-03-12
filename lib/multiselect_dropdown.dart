@@ -547,8 +547,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final row = Container(
-        color: Colors.red,
+    final row = SizedBox(
       height: 28,
       child: Row(
         children: [
@@ -603,7 +602,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Align(
-                           alignment: Alignment.centerLeft, 
+                            alignment: Alignment.centerLeft,
                             child: Text(
                               widget.title!,
                               style: widget.titleStyle,
