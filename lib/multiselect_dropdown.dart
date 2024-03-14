@@ -606,6 +606,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         labelStyle: widget.chipConfig.labelStyle,
         icon: _selectedOptions.first.icon,
         showOnlyIcon: _selectedOptions.first.showOnlyIcon,
+        rowAlignment : widget.selectedOptionRowAlignment,
       );
     }
 
