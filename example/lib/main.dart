@@ -71,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
                 const Text('WRAP', style: MyHomePage._headerStyle),
                 const SizedBox(
                   height: 4,
@@ -79,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 MultiSelectDropDown<User>(
                   showClearIcon: true,
                   controller: _controller,
-                  onOptionSelected: (options) {
+                  onOptionSelected: (options, controller) {
                     debugPrint(options.toString());
                   },
                   options: <ValueItem<User>>[
@@ -160,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 4,
                 ),
                 MultiSelectDropDown(
-                  onOptionSelected: (options) {
+                  onOptionSelected: (options, controller) {
                     debugPrint(options.toString());
                   },
                   options: const <ValueItem>[
@@ -186,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 MultiSelectDropDown.network(
                   dropdownHeight: 300,
-                  onOptionSelected: (options) {
+                  onOptionSelected: (options, controller) {
                     debugPrint(options.toString());
                   },
                   searchEnabled: true,
