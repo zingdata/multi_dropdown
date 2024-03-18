@@ -20,7 +20,8 @@ export 'models/chip_config.dart';
 export 'models/value_item.dart';
 export 'models/network_config.dart';
 
-typedef OnOptionSelected<T> = void Function(List<ValueItem<T>> selectedOptions);
+typedef OnOptionSelected<T> = void Function(
+    List<ValueItem<T>> selectedOptions, TextEditingController? controller);
 
 class MultiSelectDropDown<T> extends StatefulWidget {
   // selection type of the dropdown
@@ -633,10 +634,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (widget.selectionType == SelectionType.single && !widget.showChipInSingleSelectMode) {
       return SingleSelectedItem(
         label: _selectedOptions.first.label,
-        textStyle: widget.chipConfig.labelStyle,
         labelStyle: widget.chipConfig.labelStyle,
         icon: _selectedOptions.first.icon,
         showOnlyIcon: _selectedOptions.first.showOnlyIcon,
+        rowAlignment: widget.selectedOptionRowAlignment,
       );
     }
 
@@ -755,7 +756,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             setState(() {
               _selectedOptions.remove(removedItem);
             });
-            widget.onOptionSelected?.call(_selectedOptions);
+            widget.onOptionSelected?.call(_selectedOptions, null);
           }
           if (_focusNode.hasFocus) _focusNode.unfocus();
         }
@@ -917,6 +918,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                               onFieldSubmitted: widget.allowCustomValues
                                   ? (value) {
                                       _onDropDownOptionTap(
+                                        searchController,
                                         ValueItem<T>(label: value, value: value as T),
                                         false,
                                         dropdownState,
@@ -990,6 +992,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                                 color: Colors.transparent,
                                                 borderRadius: BorderRadius.circular(6),
                                                 child: _buildOption(
+                                                  searchController,
                                                   option,
                                                   primaryColor,
                                                   isSelected,
@@ -1030,7 +1033,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   void _onDropDownOptionTap(
-      ValueItem<T> option, bool isSelected, StateSetter dropdownState, selectedOptions) {
+    TextEditingController searchController,
+    ValueItem<T> option,
+    bool isSelected,
+    StateSetter dropdownState,
+    selectedOptions,
+  ) {
     if (widget.selectionType == SelectionType.multi) {
       if (isSelected) {
         dropdownState(() {
@@ -1075,10 +1083,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _controller!.value._selectedOptions.addAll(_selectedOptions);
     }
 
-    widget.onOptionSelected?.call(_selectedOptions);
+    widget.onOptionSelected?.call(_selectedOptions, searchController);
   }
 
   Widget _buildOption(
+    TextEditingController searchController,
     ValueItem<T> option,
     Color primaryColor,
     bool isSelected,
@@ -1111,7 +1120,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         enabled: !(_disabledOptions.firstWhereOrNull((element) => element.label == option.label) !=
             null),
         onTap: () {
-          _onDropDownOptionTap(option, isSelected, dropdownState, selectedOptions);
+          _onDropDownOptionTap(
+              searchController, option, isSelected, dropdownState, selectedOptions);
         },
         trailing: widget.showSelectedIconOnTrailing
             ? _getSelectedIcon(
@@ -1241,7 +1251,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       setState(() {
         _selectedOptions.clear();
       });
-      widget.onOptionSelected?.call(_selectedOptions);
+      widget.onOptionSelected?.call(_selectedOptions, null);
     }
     if (_focusNode.hasFocus) _focusNode.unfocus();
   }
@@ -1273,7 +1283,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         _selectedOptions.clear();
         _selectedOptions.addAll(_controller!.value._selectedOptions);
       });
-      widget.onOptionSelected?.call(_selectedOptions);
+      widget.onOptionSelected?.call(_selectedOptions, null);
     }
 
     if (_selectionMode != _controller!.value._isDropdownOpen) {

@@ -253,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       size: 24,
                       color: context.colorTheme.secondary,
                     ),
-                    onOptionSelected: (List<ValueItem<String>> selectedOptions) {},
+                    onOptionSelected: (List<ValueItem<String>> selectedOptions,controller) {},
                     onSearch: (value, List<ValueItem<String>> options) {},
                     allowCustomValues: false,
                     alwaysShowOptionIcon: false,

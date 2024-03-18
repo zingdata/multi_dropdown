@@ -51,7 +51,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final String? hintText;
   final TextStyle? hintStyle;
   final SelectionType selectionType;
-  final Function(List<ValueItem<T>> selectedOptions) onOptionSelected;
+  final Function(List<ValueItem<T>> selectedOptions,TextEditingController? controller) onOptionSelected;
 
   final NetworkConfig? networkConfig;
   final Future<List<ValueItem<T>>> Function(dynamic)? responseParser;
