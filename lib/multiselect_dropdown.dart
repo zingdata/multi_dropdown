@@ -68,6 +68,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final bool alwaysShowOptionIcon;
   final double? optionItemHeight;
   final double? optionHorizontalTitleGap;
+  final Widget? noOptionWidget;
 
   // dropdownfield configuration
   final Color? backgroundColor;
@@ -280,6 +281,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.expandedSelectedOptions = true,
     this.optionHorizontalTitleGap,
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
+    this.noOptionWidget,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -355,6 +357,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.expandedSelectedOptions = true,
     this.optionHorizontalTitleGap,
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
+    this.noOptionWidget,
   })  : options = const [],
         super(key: key);
 
@@ -946,10 +949,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                               )
                             : options.isEmpty
                                 ? Center(
-                                    child: Text(
-                                      'No option to show',
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
+                                    child: widget.noOptionWidget ??
+                                        Text(
+                                          'No option to show',
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
                                   )
                                 : MediaQuery.removePadding(
                                     context: context,
