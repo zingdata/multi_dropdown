@@ -30,6 +30,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final String? title;
   final TextStyle? titleStyle;
   final double minHeight;
+  final double contentHeight;
 
   // Hint
   final String hint;
@@ -223,6 +224,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     required this.onOptionSelected,
     required this.options,
     this.minHeight = 52,
+    this.contentHeight = 28,
     this.title,
     this.titleStyle,
     this.selectedOptionTextColor,
@@ -297,6 +299,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     required this.networkConfig,
     required this.responseParser,
     this.minHeight = 52,
+    this.contentHeight = 28,
     this.title,
     this.titleStyle,
     this.responseErrorBuilder,
@@ -552,7 +555,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   Widget build(BuildContext context) {
     final row = SizedBox(
-      height: 28,
+      height: widget.contentHeight,
       child: Row(
         children: [
           Expanded(
@@ -1127,11 +1130,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           _onDropDownOptionTap(
               searchController, option, isSelected, dropdownState, selectedOptions);
         },
-        trailing: widget.showSelectedIconOnTrailing
+        trailing: widget.showSelectedIconOnTrailing || option.trailingIcon != null
             ? _getSelectedIcon(
                 isSelected,
                 primaryColor,
-                option.icon,
+                option.trailingIcon ?? option.icon,
                 true,
               )
             : null,

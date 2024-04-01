@@ -13,6 +13,7 @@ class ValueItem<T> {
   /// The label of the value item
   final String label;
   final Widget? icon;
+  final Widget? trailingIcon;
   final bool showOnlyIcon;
 
   /// The value of the value item
@@ -23,6 +24,7 @@ class ValueItem<T> {
     required this.label,
     required this.value,
     this.icon,
+    this.trailingIcon,
     this.showOnlyIcon = false,
   });
 
@@ -38,6 +40,7 @@ class ValueItem<T> {
       'label': label,
       'value': value,
       'icon': icon,
+      'trailingIcon': trailingIcon,
       'showOnlyIcon': showOnlyIcon,
     };
   }
@@ -48,6 +51,7 @@ class ValueItem<T> {
       label: map['label'] ?? '',
       value: map['value'],
       icon: map['icon'],
+      trailingIcon: map['trailingIcon'],
       showOnlyIcon: map['showOnlyIcon'],
     );
   }
