@@ -747,12 +747,15 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Handle the focus change on tap outside of the dropdown.
   void _onOutSideTap() {
-    if (_searchFocusNode != null) {
-      _searchFocusNode!.unfocus();
-    }
-    _focusNode.unfocus();
-    _overlayEntry?.remove();
-    if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+    try {
+      if (_searchFocusNode != null) {
+        _searchFocusNode!.unfocus();
+      }
+      _focusNode.unfocus();
+      _overlayEntry?.remove();
+      if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   /// Buid the selected item chip.
