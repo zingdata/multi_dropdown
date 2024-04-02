@@ -674,17 +674,23 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Dispose the focus node and overlay entry.
   @override
   void dispose() {
-    if (_overlayEntry?.mounted == true) {
-      if (_overlayState != null && _overlayEntry != null && _overlayEntry!.mounted) {
-        _overlayEntry?.remove();
+    try {
+      if (_overlayEntry?.mounted == true) {
+        if (_overlayState != null && _overlayEntry != null && _overlayEntry!.mounted) {
+          _overlayEntry?.remove();
+        }
+        _overlayEntry = null;
+        _overlayState?.dispose();
       }
-      _overlayEntry = null;
-      _overlayState?.dispose();
+      _focusNode.dispose();
+      if (_controller != null) {
+        _controller!.dispose();
+      }
+    // ignore: empty_catches
+    } catch (e) {
+        
     }
-    _focusNode.dispose();
-    if (_controller != null) {
-      _controller!.dispose();
-    }
+
     super.dispose();
   }
 
@@ -1108,6 +1114,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ? null
             : Text(
                 option.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: widget.optionTextStyle ??
                     TextStyle(
                       fontSize: widget.hintFontSize,
