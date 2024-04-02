@@ -6,7 +6,6 @@ import 'package:multi_dropdown/multiselect_dropdown.dart';
 class MultiSelectDropDownWidget<T> extends StatelessWidget {
   const MultiSelectDropDownWidget({
     super.key,
-    this.minHeight,
     this.controller,
     this.decoration,
     this.title,
@@ -41,6 +40,11 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.optionsContentPadding,
     this.suffixIcon,
     this.containerPadding,
+    this.mainPadding = const EdgeInsets.only(left: 2),
+    this.noOptionWidget,
+    this.minHeight,
+    this.contentHeight = 28,
+    this.height = 38,
   });
   final double? minHeight;
   final BoxDecoration? decoration;
@@ -51,7 +55,8 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final String? hintText;
   final TextStyle? hintStyle;
   final SelectionType selectionType;
-  final Function(List<ValueItem<T>> selectedOptions,TextEditingController? controller) onOptionSelected;
+  final Function(List<ValueItem<T>> selectedOptions, TextEditingController? controller)
+      onOptionSelected;
 
   final NetworkConfig? networkConfig;
   final Future<List<ValueItem<T>>> Function(dynamic)? responseParser;
@@ -78,6 +83,10 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final EdgeInsets? optionsContentPadding;
   final Icon? suffixIcon;
   final EdgeInsets? containerPadding;
+  final EdgeInsets mainPadding;
+  final Widget? noOptionWidget;
+  final double height;
+  final double contentHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -141,62 +150,61 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     );
 
     return SizedBox(
-      height: 38,
+      height: height,
       child: Center(
         child: networkConfig == null
-            ? Padding(
-                padding: const EdgeInsets.only(left: 2),
-                child: MultiSelectDropDown<T>(
-                  controller: controller,
-                  title: title,
-                  titleStyle: titleStyle,
-                  inputDecoration: decoration,
-                  gettingOptions: gettingOptions,
-                  borderColor: Colors.transparent,
-                  borderRadius: 6,
-                  padding: containerPadding ?? EdgeInsets.zero,
-                  onOptionSelected: onOptionSelected,
-                  hint: hintText ?? 'select value',
-                  hintStyle: hintStyle ??
-                      context.textTheme.bodyLarge?.copyWith(color: context.colorTheme.secondary),
-                  options: options ?? [],
-                  selectionType: selectionType,
-                  searchEnabled: searchEnabled,
-                  suffixIcon: suffixIcon,
-                  chipConfig: chipConfig,
-                  dropdownHeight: dropdownHeight,
-                  showChipInSingleSelectMode: showChipInSingleSelectMode,
-                  showClearIcon: false,
-                  optionTextStyle: optionTextStyle ?? context.textTheme.bodyLarge,
-                  selectedOptionIcon: selectedOptionIcon,
-                  unSelectedOptionIcon: unSelectedOptionIcon,
-                  searchBoxPadding: const EdgeInsets.all(4),
-                  searchBoxHeight: 45,
-                  alwaysShowOptionIcon: alwaysShowOptionIcon,
-                  showSelectedIconOnTrailing: false,
-                  focusedBorderColor: Colors.transparent,
-                  dropDownBoxDecoration: dropDownBoxDecoration,
-                  searchInputDecoration: searchInputDecoration,
-                  searchKeyboardType: searchKeyboardType,
-                  selectedOptionBackgroundColor: context.colorTheme.primaryContainer,
-                  selectedOptionShapeBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  onSearch: onSearch,
-                  selectedOptions: selectedOptions ?? [],
-                  onShowOverlay: onShowOverlay,
-                  reachedMaxOptionsScroll: reachedMaxOptionsScroll,
-                  optionItemPadding: const EdgeInsets.symmetric(horizontal: 6),
-                  optionsContentPadding: optionsContentPadding ??
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                  showDropDownOnStart: showDropDownOnStart,
-                  allowCustomValues: allowCustomValues,
-                  dropDownWidth: dropDownWidth,
-                  expandedSelectedOptions: expandedSelectedOptions,
-                  optionItemHeight: optionItemHeight,
-                  optionHorizontalTitleGap: optionHorizontalTitleGap,
-                  selectedOptionRowAlignment: selectedOptionRowAlignment,
+            ? MultiSelectDropDown<T>(
+                controller: controller,
+                title: title,
+                titleStyle: titleStyle,
+                inputDecoration: decoration,
+                gettingOptions: gettingOptions,
+                borderColor: Colors.transparent,
+                borderRadius: 6,
+                padding: containerPadding ?? EdgeInsets.zero,
+                onOptionSelected: onOptionSelected,
+                hint: hintText ?? 'select value',
+                hintStyle: hintStyle ??
+                    context.textTheme.bodyLarge?.copyWith(color: context.colorTheme.secondary),
+                options: options ?? [],
+                selectionType: selectionType,
+                searchEnabled: searchEnabled,
+                suffixIcon: suffixIcon,
+                chipConfig: chipConfig,
+                dropdownHeight: dropdownHeight,
+                showChipInSingleSelectMode: showChipInSingleSelectMode,
+                showClearIcon: false,
+                optionTextStyle: optionTextStyle ?? context.textTheme.bodyLarge,
+                selectedOptionIcon: selectedOptionIcon,
+                unSelectedOptionIcon: unSelectedOptionIcon,
+                searchBoxPadding: const EdgeInsets.all(4),
+                searchBoxHeight: 45,
+                contentHeight: contentHeight,
+                alwaysShowOptionIcon: alwaysShowOptionIcon,
+                showSelectedIconOnTrailing: false,
+                focusedBorderColor: Colors.transparent,
+                dropDownBoxDecoration: dropDownBoxDecoration,
+                searchInputDecoration: searchInputDecoration,
+                searchKeyboardType: searchKeyboardType,
+                selectedOptionBackgroundColor: context.colorTheme.primaryContainer,
+                selectedOptionShapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
                 ),
+                onSearch: onSearch,
+                selectedOptions: selectedOptions ?? [],
+                onShowOverlay: onShowOverlay,
+                reachedMaxOptionsScroll: reachedMaxOptionsScroll,
+                optionItemPadding: const EdgeInsets.symmetric(horizontal: 6),
+                optionsContentPadding:
+                    optionsContentPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                showDropDownOnStart: showDropDownOnStart,
+                allowCustomValues: allowCustomValues,
+                dropDownWidth: dropDownWidth,
+                expandedSelectedOptions: expandedSelectedOptions,
+                optionItemHeight: optionItemHeight,
+                optionHorizontalTitleGap: optionHorizontalTitleGap,
+                selectedOptionRowAlignment: selectedOptionRowAlignment,
+                noOptionWidget: noOptionWidget,
               )
             : MultiSelectDropDown<T>.network(
                 borderColor: Colors.transparent,
@@ -226,6 +234,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 unSelectedOptionIcon: unSelectedOptionIcon,
                 searchBoxPadding: const EdgeInsets.all(4),
                 searchBoxHeight: 45,
+                contentHeight: contentHeight,
                 alwaysShowOptionIcon: alwaysShowOptionIcon,
                 showSelectedIconOnTrailing: false,
                 focusedBorderColor: Colors.transparent,
@@ -242,6 +251,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 optionItemHeight: optionItemHeight,
                 optionHorizontalTitleGap: optionHorizontalTitleGap,
                 selectedOptionRowAlignment: selectedOptionRowAlignment,
+                noOptionWidget: noOptionWidget,
               ),
       ),
     );

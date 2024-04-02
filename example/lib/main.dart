@@ -217,13 +217,63 @@ class _MyHomePageState extends State<MyHomePage> {
                     titleStyle: context.textTheme.bodySmall?.copyWith(
                       color: context.colorTheme.secondary,
                     ),
+                    containerPadding: const EdgeInsets.only(bottom: 4, left: 4),
+                    decoration: BoxDecoration(
+                      color: context.colorTheme.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: context.colorTheme.outline),
+                    ),
+                    showDropDownOnStart: false,
+                    selectionType: SelectionType.single,
+                    searchKeyboardType: TextInputType.text,
+                    options: const [
+                      ValueItem(label: 'Test1', value: 'Test1'),
+                      ValueItem(label: 'Test2', value: 'Test2'),
+                    ],
+                    selectedOptions: [
+                      ValueItem(
+                        label: 'Test1',
+                        value: 'Test1',
+                        icon: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Image.asset(
+                            ZingIconsWidget.add,
+                            height: 18,
+                            width: 18,
+                            color: context.colorTheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ],
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down_rounded,
+                      size: 24,
+                      color: context.colorTheme.secondary,
+                    ),
+                    onOptionSelected: (values, controller) {},
+                    allowCustomValues: true,
+                    alwaysShowOptionIcon: false,
+                    searchEnabled: true,
+                    canDeleteChip: true,
+                    showChipInSingleSelectMode: true,
+                    chipTextStyle: context.textTheme.bodyLarge,
+                  ),
+                ),
+                SizedBox(
+                  height: 59,
+                  child: MultiSelectDropDownWidget<String>(
+                    mainPadding: const EdgeInsets.only(left: 2, bottom: 10),
+                    title: 'Type',
+                    titleStyle: context.textTheme.bodySmall?.copyWith(
+                      color: context.colorTheme.secondary,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: context.colorTheme.outline,
                       ),
                     ),
-                   // showDropDownOnStart: true,
+                    // showDropDownOnStart: true,
                     selectionType: SelectionType.single,
                     gettingOptions: false,
                     searchKeyboardType: TextInputType.text,
@@ -236,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: 'Test1',
                         value: 'Test1',
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 4),  
+                          padding: const EdgeInsets.only(right: 4),
                           child: Image.asset(
                             ZingIconsWidget.add,
                             height: 18,
@@ -253,13 +303,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       size: 24,
                       color: context.colorTheme.secondary,
                     ),
-                    onOptionSelected: (List<ValueItem<String>> selectedOptions,controller) {},
+                    onOptionSelected: (List<ValueItem<String>> selectedOptions, controller) {},
                     onSearch: (value, List<ValueItem<String>> options) {},
                     allowCustomValues: false,
                     alwaysShowOptionIcon: false,
                     searchEnabled: true,
                     canDeleteChip: false,
-                    showChipInSingleSelectMode: false,
+                    showChipInSingleSelectMode: true,
                     chipTextStyle: context.textTheme.bodyLarge,
                   ),
                 ),

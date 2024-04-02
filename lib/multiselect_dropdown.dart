@@ -612,6 +612,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               widget.title!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: widget.titleStyle,
                             ),
                           ),
@@ -686,10 +688,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       if (_controller != null) {
         _controller!.dispose();
       }
-    // ignore: empty_catches
-    } catch (e) {
-        
-    }
+      // ignore: empty_catches
+    } catch (e) {}
 
     super.dispose();
   }
@@ -1114,8 +1114,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ? null
             : Text(
                 option.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
                 style: widget.optionTextStyle ??
                     TextStyle(
                       fontSize: widget.hintFontSize,
