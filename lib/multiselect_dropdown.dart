@@ -675,7 +675,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   void dispose() {
     if (_overlayEntry?.mounted == true) {
-      if (_overlayState != null && _overlayEntry != null) {
+      if (_overlayState != null && _overlayEntry != null && _overlayEntry!.mounted) {
         _overlayEntry?.remove();
       }
       _overlayEntry = null;

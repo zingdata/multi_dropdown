@@ -257,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onSearch: (value, List<ValueItem<String>> options) {},
                     allowCustomValues: false,
                     alwaysShowOptionIcon: false,
-                    searchEnabled: false,
+                    searchEnabled: true,
                     canDeleteChip: false,
                     showChipInSingleSelectMode: false,
                     chipTextStyle: context.textTheme.bodyLarge,
