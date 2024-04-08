@@ -689,7 +689,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         _controller!.dispose();
       }
       // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+    }
 
     super.dispose();
   }
@@ -754,8 +756,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _focusNode.unfocus();
       _overlayEntry?.remove();
       if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
+    }
   }
 
   /// Buid the selected item chip.
