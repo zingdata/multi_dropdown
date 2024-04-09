@@ -1,5 +1,6 @@
 library multiselect_dropdown;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -382,7 +383,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   OverlayState? _overlayState;
   OverlayEntry? _overlayEntry;
   bool _selectionMode = false;
-
+  bool _isOverlayVisible = false;
   late final FocusNode _focusNode;
   final LayerLink _layerLink = LayerLink();
 
@@ -460,7 +461,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Handles the focus change to show/hide the dropdown.
   _handleFocusChange() {
     Future.delayed(const Duration(milliseconds: 100)).then((value) {
-      if (_focusNode.hasFocus && mounted) {
+      if (_focusNode.hasFocus && mounted && !_isOverlayVisible) {
+        _isOverlayVisible = true;
         _overlayEntry = _responseBody != null && widget.networkConfig != null
             ? _buildNetworkErrorOverlayEntry()
             : _buildOverlayEntry();
@@ -677,6 +679,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   @override
   void dispose() {
     try {
+      _isOverlayVisible = false;
       if (_overlayEntry?.mounted == true) {
         if (_overlayState != null && _overlayEntry != null && _overlayEntry!.mounted) {
           _overlayEntry?.remove();
@@ -750,6 +753,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Handle the focus change on tap outside of the dropdown.
   void _onOutSideTap() {
     try {
+      _isOverlayVisible = false;
       if (_searchFocusNode != null) {
         _searchFocusNode!.unfocus();
       }
@@ -761,7 +765,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
   }
 
-  /// Buid the selected item chip.
+  /// Build the selected item chip.
   Widget _buildChip(ValueItem<T> item, ChipConfig chipConfig) {
     return SelectionChip<T>(
       item: item,
