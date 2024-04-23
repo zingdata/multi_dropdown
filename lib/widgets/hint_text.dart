@@ -6,18 +6,20 @@ class HintText extends StatelessWidget {
   final TextStyle? hintStyle;
   final String hintText;
   final Color? hintColor;
+  final EdgeInsets padding;
 
   const HintText({
     Key? key,
     this.hintStyle,
     required this.hintText,
     this.hintColor,
+    required this.padding,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: padding,
       child: Text(
         hintText,
         style: hintStyle ??
