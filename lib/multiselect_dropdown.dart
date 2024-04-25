@@ -447,10 +447,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Adds the selected options and disabled options to the options list.
   void _addOptions() {
-    setState(() {
-      _selectedOptions.addAll(widget.selectedOptions);
-      _disabledOptions.addAll(widget.disabledOptions);
-    });
+    if (mounted) {
+      setState(() {
+        _selectedOptions.addAll(widget.selectedOptions);
+        _disabledOptions.addAll(widget.disabledOptions);
+      });
+    }
 
     if (_controller != null) {
       _controller!.setOptions(_options);
@@ -538,8 +540,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
     if (needUpdate) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-        _overlayEntry?.markNeedsBuild();
+        if (mounted) {
+          setState(() {});
+          _overlayEntry?.markNeedsBuild();
+        }
       });
     }
     super.didUpdateWidget(oldWidget);
@@ -779,9 +783,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           if (_controller != null) {
             _controller!.clearSelection(removedItem);
           } else {
-            setState(() {
-              _selectedOptions.remove(removedItem);
-            });
+            if (mounted) {
+              setState(() {
+                _selectedOptions.remove(removedItem);
+              });
+            }
             widget.onOptionSelected?.call(_selectedOptions, null);
           }
           if (_focusNode.hasFocus) _focusNode.unfocus();
@@ -1071,9 +1077,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         dropdownState(() {
           selectedOptions.remove(option);
         });
-        setState(() {
-          _selectedOptions.remove(option);
-        });
+        if (mounted) {
+          setState(() {
+            _selectedOptions.remove(option);
+          });
+        }
       } else {
         final bool hasReachMax =
             widget.maxItems == null ? false : (_selectedOptions.length + 1) > widget.maxItems!;
@@ -1082,9 +1090,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         dropdownState(() {
           selectedOptions.add(option);
         });
-        setState(() {
-          _selectedOptions.add(option);
-        });
+        if (mounted) {
+          setState(() {
+            _selectedOptions.add(option);
+          });
+        }
       }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (widget.chipConfig.wrapType == WrapType.scroll &&
@@ -1098,10 +1108,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         selectedOptions.clear();
         selectedOptions.add(option);
       });
-      setState(() {
-        _selectedOptions.clear();
-        _selectedOptions.add(option);
-      });
+      if (mounted) {
+        setState(() {
+          _selectedOptions.clear();
+          _selectedOptions.add(option);
+        });
+      }
       _onOutSideTap();
     }
 
@@ -1275,9 +1287,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_controller != null) {
       _controller!.clearAllSelection();
     } else {
-      setState(() {
-        _selectedOptions.clear();
-      });
+      if (mounted) {
+        setState(() {
+          _selectedOptions.clear();
+        });
+      }
+
       widget.onOptionSelected?.call(_selectedOptions, null);
     }
     if (_focusNode.hasFocus) _focusNode.unfocus();
@@ -1290,26 +1305,32 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
     // if current disabled options are not equal to the controller's disabled options, update the state.
     if (_disabledOptions != _controller!.value._disabledOptions) {
-      setState(() {
-        _disabledOptions.clear();
-        _disabledOptions.addAll(_controller!.value._disabledOptions);
-      });
+      if (mounted) {
+        setState(() {
+          _disabledOptions.clear();
+          _disabledOptions.addAll(_controller!.value._disabledOptions);
+        });
+      }
     }
 
     // if current options are not equal to the controller's options, update the state.
     if (_options != _controller!.value._options) {
-      setState(() {
-        _options.clear();
-        _options.addAll(_controller!.value._options);
-      });
+      if (mounted) {
+        setState(() {
+          _options.clear();
+          _options.addAll(_controller!.value._options);
+        });
+      }
     }
 
     // if current selected options are not equal to the controller's selected options, update the state.
     if (_selectedOptions != _controller!.value._selectedOptions) {
-      setState(() {
-        _selectedOptions.clear();
-        _selectedOptions.addAll(_controller!.value._selectedOptions);
-      });
+      if (mounted) {
+        setState(() {
+          _selectedOptions.clear();
+          _selectedOptions.addAll(_controller!.value._selectedOptions);
+        });
+      }
       widget.onOptionSelected?.call(_selectedOptions, null);
     }
 
