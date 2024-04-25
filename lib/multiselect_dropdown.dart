@@ -689,19 +689,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     try {
       if (mounted) {
         _isOverlayVisible = false;
-        if (_overlayEntry?.mounted == true) {
-          if (_overlayState != null && _overlayEntry != null && _overlayEntry!.mounted) {
-            _overlayEntry?.remove();
-          }
-          _overlayEntry = null;
-          _overlayState?.dispose();
-        }
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+        _overlayState?.dispose();
         _focusNode.dispose();
         if (_controller != null) {
           _controller!.dispose();
         }
       }
-
       // ignore: empty_catches
     } catch (e) {
       if (widget.onShowOverlay != null) widget.onShowOverlay!(null);
