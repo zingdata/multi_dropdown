@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:multi_dropdown/models/network_config.dart';
 import 'package:multi_dropdown/widgets/hint_text.dart';
@@ -115,6 +116,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final EdgeInsets? optionsContentPadding;
   final EdgeInsets optionItemPadding;
   final bool allowCustomValues;
+  final List<TextInputFormatter> searchInputFormatters;
 
   final bool expandedSelectedOptions;
 
@@ -273,6 +275,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchInputDecoration,
     this.searchKeyboardType,
     this.searchBoxPadding,
+    this.searchInputFormatters = const [],
     this.onSearch,
     this.dropDownBoxDecoration,
     this.showDropDownOnStart = false,
@@ -352,6 +355,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.searchKeyboardType,
     this.searchBoxPadding,
     this.onSearch,
+    this.searchInputFormatters = const [],
     this.dropDownBoxDecoration,
     this.showDropDownOnStart = false,
     this.reachedMaxOptionsScroll,
@@ -909,6 +913,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                               focusNode: _searchFocusNode,
                               keyboardType: widget.searchKeyboardType,
                               textInputAction: TextInputAction.done,
+                              inputFormatters: widget.searchInputFormatters,
                               decoration: widget.searchInputDecoration ??
                                   InputDecoration(
                                     fillColor: Colors.grey.shade200,
@@ -939,7 +944,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                     ),
                                   ),
                               onChanged: (value) {
-                                debugPrint('search value changed: $value');
                                 dropdownState(() {
                                   options = _options
                                       .where((element) =>
