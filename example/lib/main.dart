@@ -2,6 +2,7 @@ import 'package:example/context_extension.dart';
 import 'package:example/multi_select_dropdown_widget.dart';
 import 'package:example/theme.dart';
 import 'package:example/zing_icons_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -313,6 +314,59 @@ class _MyHomePageState extends State<MyHomePage> {
                     chipTextStyle: context.textTheme.bodyLarge,
                   ),
                 ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    width: 40,
+                    child: MultiSelectDropDownWidget<String>(
+                      dropDownWidth: 200,
+                      optionItemHeight: 40,
+                      mainPadding: EdgeInsets.zero,
+                      containerPadding: EdgeInsets.zero,
+                      // selectedOptions: [
+                      //   ValueItem(
+                      //     label: selectedItem,
+                      //     value: selectedItem,
+                      //   )
+                      // ],
+                      customChild: SizedBox(
+                        width: 110,
+                        child: FilledButton(
+                          style: Theme.of(context).filledButtonTheme.style!.copyWith(
+                                padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
+                                shape: const WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(50),
+                                      bottomRight: Radius.circular(50),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          onPressed: null,
+                          child: Icon(
+                            CupertinoIcons.chevron_down,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      alwaysShowOptionIcon: false,
+                      searchEnabled: false,
+                      showChipInSingleSelectMode: false,
+                      options: const [
+                        ValueItem(label: 'Test1', value: 'Test1'),
+                        ValueItem(label: 'Test2', value: 'Test2'),
+                      ],
+                      selectionType: SelectionType.single,
+                      selectedOptionRowAlignment: MainAxisAlignment.end,
+                      onOptionSelected: (List<ValueItem<String?>> selectedOptions,
+                          TextEditingController? controller) {
+                        if (selectedOptions.isNotEmpty && selectedOptions.first.value != null) {}
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           ),

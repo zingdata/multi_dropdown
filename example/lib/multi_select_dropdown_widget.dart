@@ -1,11 +1,14 @@
 import 'package:example/context_extension.dart';
-import 'package:example/zing_icons_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+
+import 'zing_icons_widget.dart';
 
 class MultiSelectDropDownWidget<T> extends StatelessWidget {
   const MultiSelectDropDownWidget({
     super.key,
+    this.hint,
     this.controller,
     this.decoration,
     this.title,
@@ -45,7 +48,11 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.minHeight,
     this.contentHeight = 28,
     this.height = 38,
+    this.searchInputFormatters = const [],
+    this.customChild,
   });
+
+  final String? hint;
   final double? minHeight;
   final BoxDecoration? decoration;
   final String? title;
@@ -81,18 +88,20 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final double? optionHorizontalTitleGap;
   final MainAxisAlignment selectedOptionRowAlignment;
   final EdgeInsets? optionsContentPadding;
-  final Icon? suffixIcon;
+  final Widget? suffixIcon;
   final EdgeInsets? containerPadding;
   final EdgeInsets mainPadding;
   final Widget? noOptionWidget;
   final double height;
   final double contentHeight;
+  final List<TextInputFormatter> searchInputFormatters;
+  final Widget? customChild;
 
   @override
   Widget build(BuildContext context) {
     final outlineBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(6),
-      borderSide: BorderSide(color: context.colorTheme.outline, width: 1),
+      borderSide: BorderSide(color: context.colorTheme.outline),
     );
     final suffixIcon = this.suffixIcon ??
         Icon(
@@ -102,13 +111,10 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
         );
 
     final chipConfig = ChipConfig(
-      wrapType: WrapType.scroll,
       backgroundColor: context.colorTheme.primaryContainer,
       labelStyle: chipTextStyle ?? context.textTheme.bodyMedium,
       labelPadding: !canDeleteChip ? const EdgeInsets.symmetric(horizontal: 12) : EdgeInsets.zero,
-      padding: !canDeleteChip
-          ? EdgeInsets.zero
-          : const EdgeInsets.only(left: 12, top: 0, right: 4, bottom: 0),
+      padding: EdgeInsets.only(left: !canDeleteChip ? 4 : 12, right: 4),
       radius: 8,
       spacing: 4,
       canDelete: canDeleteChip,
@@ -131,11 +137,13 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     );
     final dropDownBoxDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(6),
-      color: context.colorTheme.background,
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(.2), blurRadius: 4)],
+      color: context.colorTheme.surface,
+      boxShadow: [
+        BoxShadow(color: Colors.black.withOpacity(.2), blurRadius: 4),
+      ],
     );
     final searchInputDecoration = InputDecoration(
-      hintText: 'Search here...',
+      hintText: hint ?? 'Search here...',
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       border: outlineBorder,
@@ -144,9 +152,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
       enabledBorder: outlineBorder,
       disabledBorder: outlineBorder,
       focusedErrorBorder: outlineBorder,
-      hintStyle: context.textTheme.bodyMedium?.copyWith(
-        color: context.colorTheme.secondary,
-      ),
+      hintStyle: context.textTheme.bodyMedium?.copyWith(color: context.colorTheme.secondary),
     );
 
     return SizedBox(
@@ -166,6 +172,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 hint: hintText ?? 'select value',
                 hintStyle: hintStyle ??
                     context.textTheme.bodyLarge?.copyWith(color: context.colorTheme.secondary),
+                hintPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 options: options ?? [],
                 selectionType: selectionType,
                 searchEnabled: searchEnabled,
@@ -186,6 +193,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 dropDownBoxDecoration: dropDownBoxDecoration,
                 searchInputDecoration: searchInputDecoration,
                 searchKeyboardType: searchKeyboardType,
+                searchInputFormatters: searchInputFormatters,
                 selectedOptionBackgroundColor: context.colorTheme.primaryContainer,
                 selectedOptionShapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
@@ -194,9 +202,8 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 selectedOptions: selectedOptions ?? [],
                 onShowOverlay: onShowOverlay,
                 reachedMaxOptionsScroll: reachedMaxOptionsScroll,
-                optionItemPadding: const EdgeInsets.symmetric(horizontal: 6),
                 optionsContentPadding:
-                    optionsContentPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                    optionsContentPadding ?? const EdgeInsets.symmetric(horizontal: 4),
                 showDropDownOnStart: showDropDownOnStart,
                 allowCustomValues: allowCustomValues,
                 dropDownWidth: dropDownWidth,
@@ -205,6 +212,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 optionHorizontalTitleGap: optionHorizontalTitleGap,
                 selectedOptionRowAlignment: selectedOptionRowAlignment,
                 noOptionWidget: noOptionWidget,
+                customChild: customChild,
               )
             : MultiSelectDropDown<T>.network(
                 borderColor: Colors.transparent,
@@ -224,6 +232,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 responseParser: responseParser,
                 selectionType: selectionType,
                 searchEnabled: searchEnabled,
+                searchInputFormatters: searchInputFormatters,
                 suffixIcon: suffixIcon,
                 chipConfig: chipConfig,
                 dropdownHeight: dropdownHeight,
@@ -252,6 +261,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 optionHorizontalTitleGap: optionHorizontalTitleGap,
                 selectedOptionRowAlignment: selectedOptionRowAlignment,
                 noOptionWidget: noOptionWidget,
+                customChild: customChild,
               ),
       ),
     );

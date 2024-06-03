@@ -560,15 +560,29 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Calculate offset size for dropdown.
-  List _calculateOffsetSize() {
+  ({
+    Size size,
+    bool heightIsGreater,
+    double leftAvailableSpace,
+    double rightAvailableSpace,
+  }) _calculateOffsetSize() {
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
 
     var size = renderBox?.size ?? Size.zero;
     var offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
 
     final availableHeight = MediaQuery.of(context).size.height - offset.dy;
+    final leftAvailableSpace = offset.dx;
+    final rightAvailableSpace = MediaQuery.of(context).size.width -
+        leftAvailableSpace -
+        (widget.dropDownWidth ?? size.width);
 
-    return [size, availableHeight < widget.dropdownHeight];
+    return (
+      size: size,
+      heightIsGreater: availableHeight < widget.dropdownHeight,
+      leftAvailableSpace: leftAvailableSpace,
+      rightAvailableSpace: rightAvailableSpace,
+    );
   }
 
   @override
@@ -855,9 +869,22 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     // Calculate the offset and the size of the dropdown button
     final values = _calculateOffsetSize();
     // Get the size from the first item in the values list
-    final size = values[0] as Size;
+    final size = values.size;
     // Get the showOnTop value from the second item in the values list
-    final showOnTop = values[1] as bool;
+    final showOnTop = values.heightIsGreater;
+
+    final compositedTransformFollowerOffset =
+        widget.dropDownWidth == null || values.rightAvailableSpace > widget.dropDownWidth!
+            ? Offset.zero
+            : Offset(
+                0 -
+                    (values.leftAvailableSpace < 0
+                        ? values.leftAvailableSpace - 10
+                        : values.rightAvailableSpace < 0
+                            ? -values.rightAvailableSpace + 10
+                            : 0),
+                4,
+              );
 
     final searchController = TextEditingController();
 
@@ -899,6 +926,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               showWhenUnlinked: true,
               targetAnchor: showOnTop ? Alignment.topLeft : Alignment.bottomLeft,
               followerAnchor: showOnTop ? Alignment.bottomLeft : Alignment.topLeft,
+              offset: compositedTransformFollowerOffset,
               child: Material(
                 color: Colors.transparent,
                 child: Container(
@@ -1251,8 +1279,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Builds overlay entry for showing error when fetching data from network fails.
   OverlayEntry _buildNetworkErrorOverlayEntry() {
     final values = _calculateOffsetSize();
-    final size = values[0] as Size;
-    final showOnTop = values[1] as bool;
+    final size = values.size;
+    final showOnTop = values.heightIsGreater;
 
     // final offsetY = showOnTop ? -(size.height + 5) : size.height + 5;
 
