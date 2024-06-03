@@ -18,21 +18,37 @@ class SelectionChip<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Chip(
+    final textWidget = Text(
+      item.label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: textTheme.bodyMedium,
+    );
+    return Container(
       padding: chipConfig.padding,
-      label: Text(item.label, style: textTheme.bodyMedium),
-      shape: chipConfig.outlineBorder ??
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              chipConfig.radius,
-            ),
-          ),
-      deleteIcon: chipConfig.deleteIcon,
-      deleteIconColor: chipConfig.deleteIconColor,
-      labelPadding: chipConfig.labelPadding,
-      backgroundColor: chipConfig.backgroundColor ?? Theme.of(context).primaryColor,
-      labelStyle: chipConfig.labelStyle ?? TextStyle(color: chipConfig.labelColor, fontSize: 14),
-      onDeleted: chipConfig.canDelete ? () => onItemDelete(item) : null,
+      decoration: BoxDecoration(
+        color: chipConfig.backgroundColor,
+        borderRadius: BorderRadius.circular(chipConfig.radius),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(child: textWidget),
+          if (chipConfig.canDelete)
+            SizedBox(
+              height: 24,
+              width: 24,
+              child: IconButton(
+                onPressed: () => onItemDelete(item),
+                icon: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: chipConfig.deleteIconColor,
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 }

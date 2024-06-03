@@ -120,6 +120,10 @@ class MultiSelectDropDown<T> extends StatefulWidget {
 
   final bool expandedSelectedOptions;
 
+  final Widget? customChild;
+
+  /// [customChild] is a widget if user don't want to show selected value and mostly is container or any custom widget
+
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
   ///  **Selection Type**
@@ -290,6 +294,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionHorizontalTitleGap,
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
     this.noOptionWidget,
+    this.customChild,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -369,6 +374,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.optionHorizontalTitleGap,
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
     this.noOptionWidget,
+    this.customChild,
   })  : options = const [],
         super(key: key);
 
@@ -607,36 +613,37 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           onTap: () {
             _toggleFocus();
           },
-          child: Container(
-            constraints: BoxConstraints(
-              minWidth: MediaQuery.of(context).size.width,
-              minHeight: widget.minHeight,
-            ),
-            padding: _getContainerPadding(),
-            decoration: _getContainerDecoration(),
-            child: widget.title != null
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.title!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: widget.titleStyle,
+          child: widget.customChild ??
+              Container(
+                constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width,
+                  minHeight: widget.minHeight,
+                ),
+                padding: _getContainerPadding(),
+                decoration: _getContainerDecoration(),
+                child: widget.title != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  widget.title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: widget.titleStyle,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      row,
-                    ],
-                  )
-                : row,
-          ),
+                          row,
+                        ],
+                      )
+                    : row,
+              ),
         ),
       ),
     );
