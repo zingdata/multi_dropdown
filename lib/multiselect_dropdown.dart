@@ -1160,10 +1160,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         });
       }
       _onOutSideTap();
-
-      if (!widget.updateState) {
-        clear();
-      }
     }
 
     if (_controller != null) {
@@ -1172,6 +1168,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     }
 
     widget.onOptionSelected?.call(_selectedOptions, searchController);
+
+    if (!widget.updateState) {
+      clear();
+    }
   }
 
   Widget _buildOption(
