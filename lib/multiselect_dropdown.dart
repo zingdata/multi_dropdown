@@ -1149,20 +1149,21 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         }
       });
     } else {
-      if (widget.updateState) {
-        dropdownState(() {
-          selectedOptions.clear();
-          selectedOptions.add(option);
+      dropdownState(() {
+        selectedOptions.clear();
+        selectedOptions.add(option);
+      });
+      if (mounted) {
+        setState(() {
+          _selectedOptions.clear();
+          _selectedOptions.add(option);
         });
-        if (mounted) {
-          setState(() {
-            _selectedOptions.clear();
-            _selectedOptions.add(option);
-          });
-        }
       }
-
       _onOutSideTap();
+
+      if (!widget.updateState) {
+        clear();
+      }
     }
 
     if (_controller != null) {
