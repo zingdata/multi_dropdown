@@ -121,8 +121,11 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final bool expandedSelectedOptions;
 
   final Widget? customChild;
+  final bool updateState;
 
   /// [customChild] is a widget if user don't want to show selected value and mostly is container or any custom widget
+
+  /// [updateState] is true by default but if we want to not show the selection option and just want to show options without any selection we can pass updateState as false
 
   /// MultiSelectDropDown is a widget that allows the user to select multiple options from a list of options. It is a dropdown that allows the user to select multiple options.
   ///
@@ -295,6 +298,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
     this.noOptionWidget,
     this.customChild,
+    this.updateState = true,
   })  : networkConfig = null,
         responseParser = null,
         responseErrorBuilder = null,
@@ -375,6 +379,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
     this.noOptionWidget,
     this.customChild,
+    this.updateState = true,
   })  : options = const [],
         super(key: key);
 
@@ -1144,16 +1149,19 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         }
       });
     } else {
-      dropdownState(() {
-        selectedOptions.clear();
-        selectedOptions.add(option);
-      });
-      if (mounted) {
-        setState(() {
-          _selectedOptions.clear();
-          _selectedOptions.add(option);
+      if (widget.updateState) {
+        dropdownState(() {
+          selectedOptions.clear();
+          selectedOptions.add(option);
         });
+        if (mounted) {
+          setState(() {
+            _selectedOptions.clear();
+            _selectedOptions.add(option);
+          });
+        }
       }
+
       _onOutSideTap();
     }
 
