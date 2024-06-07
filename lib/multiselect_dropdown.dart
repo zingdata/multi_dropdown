@@ -16,6 +16,7 @@ import 'package:collection/collection.dart';
 import 'models/chip_config.dart';
 import 'models/value_item.dart';
 import 'enum/app_enums.dart';
+import 'widgets/search_text_field.dart';
 
 export 'enum/app_enums.dart';
 export 'models/chip_config.dart';
@@ -915,9 +916,34 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     return OverlayEntry(builder: (context) {
       List<ValueItem<T>> options = _options;
       List<ValueItem<T>> selectedOptions = [..._selectedOptions];
+      int hoveredIndex = -1;
       final _scrollBarController = ScrollController();
 
       return StatefulBuilder(builder: ((context, dropdownState) {
+        void onKeyboardArrowTap(int value) {
+          int suggestionIndex = hoveredIndex + value;
+          if (options.isNotEmpty && suggestionIndex > -1 && options.length > suggestionIndex) {
+            dropdownState(() {
+              hoveredIndex = suggestionIndex;
+            });
+          } else if (suggestionIndex < 0 && options.isNotEmpty) {
+            _scrollBarController.animateTo(
+              _scrollBarController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.ease,
+            );
+            dropdownState(() {
+              hoveredIndex = options.length - 1;
+            });
+          } else if (suggestionIndex > options.length - 1 && options.isNotEmpty) {
+            _scrollBarController.animateTo(0,
+                duration: const Duration(milliseconds: 100), curve: Curves.ease);
+            dropdownState(() {
+              hoveredIndex = 0;
+            });
+          }
+        }
+
         return Stack(
           children: [
             Positioned.fill(
@@ -945,67 +971,65 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.searchEnabled) ...[
-                        Container(
-                          height: widget.searchBoxHeight,
-                          padding: widget.searchBoxPadding ?? const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: TextFormField(
-                              controller: searchController,
-                              focusNode: _searchFocusNode,
-                              keyboardType: widget.searchKeyboardType,
-                              textInputAction: TextInputAction.done,
-                              inputFormatters: widget.searchInputFormatters,
-                              decoration: widget.searchInputDecoration ??
-                                  InputDecoration(
-                                    fillColor: Colors.grey.shade200,
-                                    isDense: true,
-                                    hintText: 'Search',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        searchController.clear();
-                                        dropdownState(() {
-                                          options = _options;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                              onChanged: (value) {
-                                dropdownState(() {
-                                  options = _options
-                                      .where((element) =>
-                                          element.label.toLowerCase().contains(value.toLowerCase()))
-                                      .toList();
-                                  if (widget.onSearch != null) widget.onSearch!(value, options);
-                                });
-                              },
-                              onFieldSubmitted: widget.allowCustomValues
-                                  ? (value) {
-                                      _onDropDownOptionTap(
-                                        searchController,
-                                        ValueItem<T>(label: value, value: value as T),
-                                        false,
-                                        dropdownState,
-                                        selectedOptions,
-                                      );
-                                    }
-                                  : null,
-                            ),
-                          ),
+                        SearchTextField(
+                          searchController: searchController,
+                          focusNode: _searchFocusNode ?? FocusNode(),
+                          searchBoxHeight: widget.searchBoxHeight,
+                          searchBoxPadding: widget.searchBoxPadding,
+                          searchKeyboardType: widget.searchKeyboardType,
+                          searchInputFormatters: widget.searchInputFormatters,
+                          searchInputDecoration: widget.searchInputDecoration,
+                          onClear: () {
+                            searchController.clear();
+                            dropdownState(() {
+                              options = _options;
+                            });
+                          },
+                          onChanged: (String value) {
+                            dropdownState(() {
+                              options = _options
+                                  .where((element) =>
+                                      element.label.toLowerCase().contains(value.toLowerCase()))
+                                  .toList();
+                              if (widget.onSearch != null) widget.onSearch!(value, options);
+                            });
+                          },
+                          onFieldSubmitted: widget.allowCustomValues
+                              ? (value) {
+                                  _onDropDownOptionTap(
+                                    searchController,
+                                    ValueItem<T>(label: value, value: value as T),
+                                    false,
+                                    dropdownState,
+                                    selectedOptions,
+                                  );
+                                }
+                              : null,
+                          closeOverlay: () {
+                            _onOutSideTap();
+                          },
+                          onSelectValue: () {
+                            if (hoveredIndex > -1) {
+                              final option = options[hoveredIndex];
+                              final isSelected = selectedOptions.firstWhereOrNull(
+                                    (element) => element.label == option.label,
+                                  ) !=
+                                  null;
+                              _onDropDownOptionTap(
+                                searchController,
+                                option,
+                                isSelected,
+                                dropdownState,
+                                selectedOptions,
+                              );
+                            }
+                          },
+                          onArrowUp: () {
+                            onKeyboardArrowTap(-1);
+                          },
+                          onArrowDown: () {
+                            onKeyboardArrowTap(1);
+                          },
                         ),
                         const Divider(height: 1),
                       ],
@@ -1074,6 +1098,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                                                   searchController,
                                                   option,
                                                   primaryColor,
+                                                  hoveredIndex == index
+                                                      ? Theme.of(context).colorScheme.outline
+                                                      : null,
                                                   isSelected,
                                                   dropdownState,
                                                   selectedOptions,
@@ -1179,6 +1206,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     TextEditingController searchController,
     ValueItem<T> option,
     Color primaryColor,
+    Color? hoverColor,
     bool isSelected,
     StateSetter dropdownState,
     List<ValueItem<T>> selectedOptions,
@@ -1197,11 +1225,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               ),
         horizontalTitleGap: widget.optionHorizontalTitleGap,
         selectedColor: widget.selectedOptionTextColor ?? primaryColor,
-        selected: isSelected,
+        selected: hoverColor == null && isSelected,
         autofocus: true,
         contentPadding: widget.optionsContentPadding,
         dense: true,
-        tileColor: widget.optionsBackgroundColor ?? Colors.white,
+        tileColor: hoverColor ?? widget.optionsBackgroundColor ?? Colors.white,
         selectedTileColor: widget.alwaysShowOptionIcon && widget.options.firstOrNull?.icon == null
             ? Colors.transparent
             : widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
@@ -1210,7 +1238,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             null),
         onTap: () {
           _onDropDownOptionTap(
-              searchController, option, isSelected, dropdownState, selectedOptions);
+            searchController,
+            option,
+            isSelected,
+            dropdownState,
+            selectedOptions,
+          );
         },
         trailing: widget.showSelectedIconOnTrailing || option.trailingIcon != null
             ? _getSelectedIcon(
@@ -1299,32 +1332,36 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         return Stack(
           children: [
             Positioned.fill(
-                child: GestureDetector(
-              onTap: _onOutSideTap,
-              child: Container(
-                color: Colors.transparent,
+              child: GestureDetector(
+                onTap: _onOutSideTap,
+                child: Container(
+                  color: Colors.transparent,
+                ),
               ),
-            )),
+            ),
             CompositedTransformFollower(
-                link: _layerLink,
-                targetAnchor: showOnTop ? Alignment.topLeft : Alignment.bottomLeft,
-                followerAnchor: showOnTop ? Alignment.bottomLeft : Alignment.topLeft,
-                child: Material(
-                    elevation: 4,
-                    child: Container(
-                        width: size.width,
-                        constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            widget.responseErrorBuilder != null
-                                ? widget.responseErrorBuilder!(context, _responseBody)
-                                : Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text('Error fetching data: $_responseBody'),
-                                  ),
-                          ],
-                        ))))
+              link: _layerLink,
+              targetAnchor: showOnTop ? Alignment.topLeft : Alignment.bottomLeft,
+              followerAnchor: showOnTop ? Alignment.bottomLeft : Alignment.topLeft,
+              child: Material(
+                elevation: 4,
+                child: Container(
+                  width: size.width,
+                  constraints: BoxConstraints.loose(Size(size.width, widget.dropdownHeight)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      widget.responseErrorBuilder != null
+                          ? widget.responseErrorBuilder!(context, _responseBody)
+                          : Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text('Error fetching data: $_responseBody'),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         );
       }));

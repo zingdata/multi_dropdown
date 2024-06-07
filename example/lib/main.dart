@@ -220,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     containerPadding: const EdgeInsets.only(bottom: 4, left: 4),
                     decoration: BoxDecoration(
-                      color: context.colorTheme.background,
+                      color: context.colorTheme.surface,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: context.colorTheme.outline),
                     ),
