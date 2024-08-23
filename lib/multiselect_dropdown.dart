@@ -116,6 +116,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   final Function(OverlayEntry? overlayEntry)? onShowOverlay;
   final bool gettingOptions;
   final EdgeInsets? optionsContentPadding;
+  final EdgeInsets? selectedOptionsContentPadding;
   final EdgeInsets optionItemPadding;
   final bool allowCustomValues;
   final List<TextInputFormatter> searchInputFormatters;
@@ -296,6 +297,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.onShowOverlay,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
+    this.selectedOptionsContentPadding,
     this.allowCustomValues = false,
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
@@ -378,6 +380,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.gettingOptions = false,
     this.optionItemPadding = const EdgeInsets.symmetric(horizontal: 6),
     this.optionsContentPadding,
+    this.selectedOptionsContentPadding,
     this.allowCustomValues = false,
     this.dropDownWidth,
     this.expandedSelectedOptions = true,
@@ -598,10 +601,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final row = SizedBox(
+    final row = Container(
       height: widget.contentHeight,
+      padding: widget.selectedOptionsContentPadding,
       child: Row(
         children: [
+          const SizedBox(width: 8),
           Expanded(
             child: _getContainerContent(),
           ),

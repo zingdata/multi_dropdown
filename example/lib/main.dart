@@ -227,6 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     showDropDownOnStart: false,
                     selectionType: SelectionType.multi,
                     searchKeyboardType: TextInputType.text,
+                    selectedOptionsContentPadding: const EdgeInsets.symmetric(horizontal: 8),
                     options: const [
                       ValueItem(label: 'Test1', value: 'Test1'),
                       ValueItem(label: 'Test2', value: 'Test2'),

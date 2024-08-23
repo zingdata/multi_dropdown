@@ -42,6 +42,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.optionHorizontalTitleGap,
     this.selectedOptionRowAlignment = MainAxisAlignment.start,
     this.optionsContentPadding,
+    this.selectedOptionsContentPadding,
     this.suffixIcon,
     this.containerPadding,
     this.mainPadding = const EdgeInsets.only(left: 2),
@@ -90,6 +91,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final double? optionHorizontalTitleGap;
   final MainAxisAlignment selectedOptionRowAlignment;
   final EdgeInsets? optionsContentPadding;
+  final EdgeInsets? selectedOptionsContentPadding;
   final Widget? suffixIcon;
   final EdgeInsets? containerPadding;
   final EdgeInsets mainPadding;
