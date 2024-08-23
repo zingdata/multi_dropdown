@@ -33,6 +33,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
     this.allowCustomValues = false,
     this.dropDownWidth,
     this.showChipInSingleSelectMode = true,
+    this.showCommaForSelectedValues = false,
     this.chipTextStyle,
     this.optionTextStyle,
     this.expandedSelectedOptions = true,
@@ -80,6 +81,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
   final bool allowCustomValues;
   final double? dropDownWidth;
   final bool showChipInSingleSelectMode;
+  final bool showCommaForSelectedValues;
   final TextStyle? chipTextStyle;
   final TextStyle? optionTextStyle;
   final bool expandedSelectedOptions;
@@ -180,6 +182,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 chipConfig: chipConfig,
                 dropdownHeight: dropdownHeight,
                 showChipInSingleSelectMode: showChipInSingleSelectMode,
+                showCommaForSelectedValues: showCommaForSelectedValues,
                 showClearIcon: false,
                 optionTextStyle: optionTextStyle ?? context.textTheme.bodyLarge,
                 selectedOptionIcon: selectedOptionIcon,
@@ -237,6 +240,7 @@ class MultiSelectDropDownWidget<T> extends StatelessWidget {
                 chipConfig: chipConfig,
                 dropdownHeight: dropdownHeight,
                 showChipInSingleSelectMode: showChipInSingleSelectMode,
+                showCommaForSelectedValues: showCommaForSelectedValues,
                 showClearIcon: false,
                 optionTextStyle: optionTextStyle ?? context.textTheme.bodyLarge,
                 selectedOptionIcon: selectedOptionIcon,

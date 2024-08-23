@@ -60,6 +60,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
 
   // chip configuration
   final bool showChipInSingleSelectMode;
+  final bool showCommaForSelectedValues;
   final ChipConfig chipConfig;
 
   // options configuration
@@ -159,6 +160,8 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   /// **Chip Configuration**
   ///
   /// [showChipInSingleSelectMode] is used to show the chip in single select mode. The default is false.
+  ///
+  /// [showCommaForSelectedValues] is used to hide the chip and show commas between selected values
   ///
   /// [chipConfig] is the configuration for the chip.
   ///
@@ -261,6 +264,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.dropdownHeight = 200,
     this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
+    this.showCommaForSelectedValues = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
     this.selectedItemBuilder,
@@ -342,6 +346,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     this.dropdownHeight = 200,
     this.optionItemHeight,
     this.showChipInSingleSelectMode = false,
+    this.showCommaForSelectedValues = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.clearIcon = const Icon(Icons.close_outlined, size: 14),
     this.selectedItemBuilder,
@@ -754,7 +759,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           if (widget.selectedItemBuilder != null) {
             return widget.selectedItemBuilder!(context, option);
           }
-          return _buildChip(option, widget.chipConfig);
+          return _buildChip(option, index, widget.chipConfig);
         },
       );
     }
@@ -765,7 +770,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         if (widget.selectedItemBuilder != null) {
           return widget.selectedItemBuilder!(context, _selectedOptions[index]);
         }
-        return _buildChip(_selectedOptions[index], widget.chipConfig);
+        return _buildChip(_selectedOptions[index], index, widget.chipConfig);
       }).toList(),
     );
   }
@@ -807,7 +812,17 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   /// Build the selected item chip.
-  Widget _buildChip(ValueItem<T> item, ChipConfig chipConfig) {
+  Widget _buildChip(
+    ValueItem<T> item,
+    int index,
+    ChipConfig chipConfig,
+  ) {
+    if (widget.showCommaForSelectedValues) {
+      return Text(
+        '${item.label}${_selectedOptions.length == 1 || index == _selectedOptions.length - 1 ? '' : ','}',
+        style: chipConfig.labelStyle,
+      );
+    }
     return SelectionChip<T>(
       item: item,
       chipConfig: chipConfig,

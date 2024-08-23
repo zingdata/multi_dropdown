@@ -225,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       border: Border.all(color: context.colorTheme.outline),
                     ),
                     showDropDownOnStart: false,
-                    selectionType: SelectionType.single,
+                    selectionType: SelectionType.multi,
                     searchKeyboardType: TextInputType.text,
                     options: const [
                       ValueItem(label: 'Test1', value: 'Test1'),
@@ -235,6 +235,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       ValueItem(
                         label: 'Test1',
                         value: 'Test1',
+                        icon: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Image.asset(
+                            ZingIconsWidget.add,
+                            height: 18,
+                            width: 18,
+                            color: context.colorTheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      ValueItem(
+                        label: 'Test2',
+                        value: 'Test2',
                         icon: Padding(
                           padding: const EdgeInsets.only(right: 4),
                           child: Image.asset(
@@ -257,6 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     searchEnabled: true,
                     canDeleteChip: true,
                     showChipInSingleSelectMode: true,
+                    showCommaForSelectedValues: true,
                     chipTextStyle: context.textTheme.bodyLarge,
                   ),
                 ),
