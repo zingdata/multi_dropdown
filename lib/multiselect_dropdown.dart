@@ -606,7 +606,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       padding: widget.selectedOptionsContentPadding,
       child: Row(
         children: [
-          const SizedBox(width: 8),
           Expanded(
             child: _getContainerContent(),
           ),
